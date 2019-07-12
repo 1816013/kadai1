@@ -56,6 +56,7 @@ protected:
 	bool DestroyProc(void);
 	Vector2 _pos;						// ·¬×‚ÌÀ•W
 	Vector2 _size;						// ·¬×‚Ì»²½Ş
+	Vector2 _speed;
 	bool _alive;						// ¶‚«‚Ä‚¢‚é‚©
 	bool _death;
 };

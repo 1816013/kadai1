@@ -21,6 +21,7 @@ Enemy::Enemy(ENEMY_T state)
 	_pos = std::get<static_cast<int>(E_STATE::VECTOR)>(state);
 	_size = std::get<static_cast<int>(E_STATE::SIZE)>(state);
 	_aim = std::get<static_cast<int>(E_STATE::AIM)>(state);
+	_speed = { 5 , 5 };
 	_alive = true;
 	_death = false;
 	init();
@@ -48,13 +49,59 @@ void Enemy::Update(void)
 		_alive = false;
 		animKey(ANIM::DEATH);
 	}*/
-	auto angle = atan2(_aim.y - _pos.y, _aim.x - _pos.x);
+	
+	if (_pos == _aim && !_placement)
+	{
+		_placement = true;
+		TRACE("配置完了\n");
+	}
+	if (_placement)
+	{
+		_dbgDrawCircle(_pos.x, _pos.y, _size.x / 2, 0xff0000, true);
+		
+	}
 
-	_pos.x += cos(angle) * 2;
-	_pos.y += sin(angle) * 2;
+	if (_moveCnt < 60)
+	{
+		Vector2 aim = { rand()% 100 + 150, rand() % 100 + 220 };
+		auto angle = atan2(aim.y - _pos.y, aim.x - _pos.x);
+		_pos.x += cos(angle) * 5;
+		_pos.y += sin(angle) * 5;
 
-
-	_dbgDrawCircle(_pos.x, _pos.y , _size.x / 2, 0xff0000, true);
+	}
+	else
+	{
+		// 超えそうになったらｽﾋﾟｰﾄﾞ調整
+		if (abs(_aim.x - _pos.x) < _speed.x)
+		{
+			_speed.x = abs(_aim.x - _pos.x);
+		}
+		if (abs(_aim.y - _pos.y) < _speed.y)
+		{
+			_speed.y = abs(_aim.y - _pos.y);
+		}
+		// 目的地に向かう
+		if (_pos.x < _aim.x)
+		{
+			_pos.x += _speed.x;
+		}
+		else
+		{
+			_pos.x -= _speed.x;
+		}
+		if (_pos.y < _aim.y)
+		{
+			_pos.y += _speed.y;
+		}
+		else
+		{
+			_pos.y -= _speed.y;
+		}
+	}
+	_moveCnt++;
+	/*auto angle = atan2(_aim.y - _pos.y, _aim.x - _pos.x);
+	_pos.x += cos(angle);
+	_pos.y += sin(angle);*/
 }
 
 UNIT Enemy::GetUnitType(void)

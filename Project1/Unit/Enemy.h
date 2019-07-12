@@ -35,5 +35,7 @@ private:
 	bool init(void) override;
 	E_TYPE _eType;
 	Vector2 _aim;
+	int _moveCnt;
+	bool _placement = false;
 };
 

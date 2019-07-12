@@ -19,10 +19,11 @@ public:
 	SCN_ID GetSceneID(void);	// ¡‚Ç‚±‚Ì¼°İ
 	void EnemyInstance(ENEMY_T state);
 private:
-	std::vector<shared_Obj> _objList;
+	std::vector<shared_Obj> _objList;	// ·¬×Ši”[—p
 	int _ghGameScreen;			// ¹Ş°Ñ—p½¸Ø°İ
 	bool Init(void);			// ²İ½Àİ½‚È‚Ç‚Ì‰Šú‰»
 	int _cnt;
+
 	bool _newKey;
 	bool _lastKey;
 };

@@ -26,13 +26,21 @@ unique_Base GameScene::Update(unique_Base own)
 	Vector2 _pos[6] = 
 	{
 		{ 0 - 16, 0  - 16},
-		{ 0 - 16, 179},
-		{ 0 - 16, 390 + 16},
-		{ 500 + 16, 0 - 16},
-		{ 500 + 16, 179},
-		{ 500 + 16, 390 + 16}
+		{ 0 - 16, lpSceneMng.gameScreenSize.y / 2 - 16},
+		{ 0 - 16, lpSceneMng.gameScreenSize.y + 16},
+		{ lpSceneMng.gameScreenSize.x + 16, 0 - 16},
+		{ lpSceneMng.gameScreenSize.x + 16, lpSceneMng.gameScreenSize.y / 2 - 16},
+		{ lpSceneMng.gameScreenSize.x + 16, lpSceneMng.gameScreenSize.y + 16}
 	};
-	Vector2 _aim = { 250, 195 };
+	Vector2 aim[21];
+	for (int y = 0; y < 3; y++)
+	{
+		for (int x = 0; x < 7; x++)
+		{
+			aim[y * 7 + x] = { 50 + (x * 50), 50 + (y * 50) };
+		}
+	}
+	
 	/*int KeyData[10] = {
 		KEY_INPUT_NUMPAD0,
 		KEY_INPUT_NUMPAD1,
@@ -50,13 +58,13 @@ unique_Base GameScene::Update(unique_Base own)
 	_newKey = CheckHitKey(KEY_INPUT_R);
 	if (_newKey && !_lastKey)
 	{
-		EnemyInstance({_pos[_cnt], Vector2(30, 32),static_cast<E_TYPE>(rand() % static_cast<int>(E_TYPE::MAX)), _aim });
-		/*_objList.emplace_back(new Enemy(Vector2(30 + (50 * (_cnt % 7)), 32 + (50 * (_cnt / 7))), Vector2(30, 32)));*/
-		_cnt++;
-		if (_cnt > 6)
+		int no = _cnt;
+		if (_cnt < 21)
 		{
-			_cnt = 0;
+			EnemyInstance({ _pos[rand() % 6], Vector2(30, 32),static_cast<E_TYPE>(rand() % static_cast<int>(E_TYPE::MAX)), aim[_cnt] });
+			_cnt++;
 		}
+		/*_objList.emplace_back(new Enemy(Vector2(30 + (50 * (_cnt % 7)), 32 + (50 * (_cnt / 7))), Vector2(30, 32)));*/
 	}
 
 
