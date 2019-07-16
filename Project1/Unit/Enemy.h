@@ -32,10 +32,12 @@ public:
 	void Update(void);						// ´ÈĞ°‚ÌˆÚ“®ŠÖ”‚É‚µ‚½‚¢
 	UNIT GetUnitType(void) override;		// ‚¨‘O‚Í´ÈĞ°‚©H
 private:
+	double sigmond(double gain, double x);
 	bool init(void) override;
 	E_TYPE _eType;
 	Vector2 _aim;
 	int _moveCnt;
 	bool _placement = false;
+	int _angle;
 };
 

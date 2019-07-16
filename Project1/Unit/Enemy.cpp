@@ -63,10 +63,14 @@ void Enemy::Update(void)
 
 	if (_moveCnt < 60)
 	{
-		Vector2 aim = { rand()% 100 + 150, rand() % 100 + 220 };
+		/*Vector2 aim = { rand()% 100 + 150, rand() % 100 + 220 };
 		auto angle = atan2(aim.y - _pos.y, aim.x - _pos.x);
 		_pos.x += cos(angle) * 5;
-		_pos.y += sin(angle) * 5;
+		_pos.y += sin(angle) * 5;*/
+		auto sig =  1 / 1 + exp(-_pos.x);
+		_speed.y *= sig;
+		_pos += _speed * 5;
+
 
 	}
 	else
@@ -107,6 +111,11 @@ void Enemy::Update(void)
 UNIT Enemy::GetUnitType(void)
 {
 	return UNIT::ENEMY;
+}
+
+double Enemy::sigmond(double gain, double x)
+{
+	return ;
 }
 
 bool Enemy::init(void)
