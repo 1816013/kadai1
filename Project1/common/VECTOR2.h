@@ -1,51 +1,67 @@
 #pragma once
-class Vector2
+
+template<class T>
+class Vector2Temple
 {
 public:
-	Vector2();				// ｺﾝｽﾄﾗｸﾀ
-	Vector2(int x, int y);	// 引数付きのｺﾝｽﾄﾗｸﾀ
-	~Vector2();				// ﾃﾞｽﾄﾗｸﾀ
-	int x;					// x座標 
-	int y;					// y座標
+	Vector2Temple();				// ｺﾝｽﾄﾗｸﾀ
+	Vector2Temple(T x, T y);	// 引数付きのｺﾝｽﾄﾗｸﾀ
+	~Vector2Temple();				// ﾃﾞｽﾄﾗｸﾀ
+	T x;					// x座標 
+	T y;					// y座標
 
 	// 代入演算子
-	Vector2& operator = (const Vector2& vec);
+	Vector2Temple& operator = (const Vector2Temple& vec);
 
 	// 添え字演算子
 	int& operator[](int i);
 
 	// 比較演算子
-	bool operator==(const Vector2& vec) const;
-	bool operator!=(const Vector2& vec) const;
-	bool operator<=(const Vector2& vec) const;
-	bool operator<(const Vector2& vec) const;
-	bool operator>=(const Vector2& vec) const;
-	bool operator>(const Vector2& vec) const;
+	bool operator==(const Vector2Temple& vec) const;
+	bool operator!=(const Vector2Temple& vec) const;
+	bool operator<=(const Vector2Temple& vec) const;
+	bool operator<(const Vector2Temple& vec) const;
+	bool operator>=(const Vector2Temple& vec) const;
+	bool operator>(const Vector2Temple& vec) const;
 
 	// 単項演算子
 
-	Vector2& operator+=(const Vector2& vec);
-	Vector2& operator-=(const Vector2& vec);
-	Vector2& operator*=(int k);
-	Vector2& operator/=(int k);
-	Vector2 operator+()const;
-	Vector2 operator-()const;
+	Vector2Temple& operator+=(const Vector2Temple& vec);
+	Vector2Temple& operator-=(const Vector2Temple& vec);
+	Vector2Temple& operator*=(T k);
+	Vector2Temple& operator/=(T k);
+	Vector2Temple operator+()const;
+	Vector2Temple operator-()const;
 };
 
 // ﾍﾞｸﾄﾙの演算
-// Vector2 + int
-Vector2 operator+(const Vector2& v, const int k);
-// Vector2 - int
-Vector2 operator-(const Vector2& v, const int k);
-// Vector2 + Vector2
-Vector2 operator+(const Vector2& v, const Vector2& u);
-// Vector2 - Vector2
-Vector2 operator-(const Vector2& v, const Vector2& u);
-// int * Vector2
-Vector2 operator*(const int k, const Vector2& v);
-// Vector2 * int
-Vector2 operator*(const Vector2& v, const int k);
-// Vector2 / int
-Vector2 operator/(const Vector2& v, const int k);
-// Vector2 % int
-Vector2 operator%(const Vector2& v, const int k);
+// Vector2Temple + int
+template<class T>
+Vector2Temple<T> operator+(const Vector2Temple<T>& v, const T k);
+// Vector2Temple - int
+template<class T>
+Vector2Temple<T> operator-(const Vector2Temple<T>& v, const T k);
+// Vector2Temple + Vector2Temple
+template<class T>
+Vector2Temple<T> operator+(const Vector2Temple<T>& v, const Vector2Temple<T>& u);
+// Vector2Temple - Vector2Temple
+template<class T>
+Vector2Temple<T> operator-(const Vector2Temple<T>& v, const Vector2Temple<T>& u);
+// int * Vector2Temple
+template<class T>
+Vector2Temple<T> operator*(const int k, const Vector2Temple<T>& v);
+// Vector2Temple * int
+template<class T>
+Vector2Temple<T> operator*(const Vector2Temple<T>& v, const T k);
+// Vector2Temple / int
+template<class T>
+Vector2Temple<T> operator/(const Vector2Temple<T>& v, const T k);
+// Vector2Temple % int
+template<class T>
+Vector2Temple<T> operator%(const Vector2Temple<T>& v, const T k);
+
+using Vector2 = Vector2Temple<int>;
+using Vector2_D = Vector2Temple<double>;
+using Vector2_F = Vector2Temple<float>;
+
+#include"./details/VECTOR2.h"

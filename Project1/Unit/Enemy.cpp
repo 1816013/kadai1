@@ -21,7 +21,7 @@ Enemy::Enemy(ENEMY_T state)
 	_pos = std::get<static_cast<int>(E_STATE::VECTOR)>(state);
 	_size = std::get<static_cast<int>(E_STATE::SIZE)>(state);
 	_aim = std::get<static_cast<int>(E_STATE::AIM)>(state);
-	_speed = { 5 , 5 };
+	
 	_alive = true;
 	_death = false;
 	init();
@@ -40,6 +40,7 @@ void Enemy::Draw(void)
 
 void Enemy::Update(void)
 {
+	_dbgDrawCircle(_pos.x, _pos.y, _size.x / 2, 0xff0000, true);
 	/*if (DestroyProc())
 	{
 		return;
@@ -50,28 +51,28 @@ void Enemy::Update(void)
 		animKey(ANIM::DEATH);
 	}*/
 	
-	if (_pos == _aim && !_placement)
+	/*if (_pos == _aim && !_placement)
 	{
 		_placement = true;
 		TRACE("”z’uŠ®—¹\n");
 	}
 	if (_placement)
 	{
-		_dbgDrawCircle(_pos.x, _pos.y, _size.x / 2, 0xff0000, true);
+
 		
 	}
-
-	if (_moveCnt < 60)
+*/
+	Vector2_D _speed = { 5 , 5 };
+	if (_moveCnt < 6000)
 	{
+		
 		/*Vector2 aim = { rand()% 100 + 150, rand() % 100 + 220 };
 		auto angle = atan2(aim.y - _pos.y, aim.x - _pos.x);
 		_pos.x += cos(angle) * 5;
 		_pos.y += sin(angle) * 5;*/
-		auto sig =  1 / 1 + exp(-_pos.x);
-		_speed.y *= sig;
-		_pos += _speed * 5;
-
-
+		_pos.y *= sigmoid(1.0, _pos.x);
+		_pos.x += _speed.x;
+		_dbgDrawFormatString(0, 15, 0xffffff, "sigmoid%f\n", sigmoid(1.0, _pos.x))
 	}
 	else
 	{
@@ -113,9 +114,9 @@ UNIT Enemy::GetUnitType(void)
 	return UNIT::ENEMY;
 }
 
-double Enemy::sigmond(double gain, double x)
+double Enemy::sigmoid(double gain, double x)
 {
-	return ;
+	return 1.0f / (1.0f + exp(-gain * x));
 }
 
 bool Enemy::init(void)

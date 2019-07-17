@@ -8,7 +8,7 @@ class Player :
 {
 public:
 	Player();							// ºİ½Ä×¸À
-	Player(Vector2 vec, Vector2 size);	// ˆø”•t‚«ºİ½Ä×¸À
+	Player(Vector2_D vec, Vector2 size);	// ˆø”•t‚«ºİ½Ä×¸À
 	~Player();							// ÃŞ½Ä×¸À
 	void Update(void);					// ÌßÚ²Ô°‚ÌˆÚ“®ˆ—ŠÖ”
 	void Draw(void) override;			// ÌßÚ²Ô°•`‰æ

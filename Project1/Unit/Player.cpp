@@ -14,7 +14,7 @@ Player::Player()
 	_alive = true;
 }
 
-Player::Player(Vector2 vec, Vector2 size)
+Player::Player(Vector2_D vec, Vector2 size)
 {
 	//animKey(ANIM::NOMAL);
 	init();
@@ -59,7 +59,7 @@ void Player::Update(void)
 	{
 		_pos.y++;
 	}
-	_TdbgDrawFormatString(0, 0, 0xffffff, "plauyerPos: x %d, y%d", _pos.x, _pos.y);
+	_dbgDrawFormatString(0, 0, 0xffffff, "plauyerPos: x %f, y%f", _pos.x, _pos.y);
 	_dbgDrawBox(_pos.x - _size.x / 2, _pos.y - _size.y / 2, _pos.x + _size.x / 2, _pos.y + _size.y / 2, 0x00ff00, true);
 }
 

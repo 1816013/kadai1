@@ -19,7 +19,7 @@ enum class E_TYPE
 	MAX
 };
 
-using ENEMY_T = std::tuple<Vector2, Vector2, E_TYPE, Vector2>;
+using ENEMY_T = std::tuple<Vector2_D, Vector2, E_TYPE, Vector2>;
 
 class Enemy :
 	public Obj
@@ -32,7 +32,7 @@ public:
 	void Update(void);						// ´ÈĞ°‚ÌˆÚ“®ŠÖ”‚É‚µ‚½‚¢
 	UNIT GetUnitType(void) override;		// ‚¨‘O‚Í´ÈĞ°‚©H
 private:
-	double sigmond(double gain, double x);
+	double sigmoid(double gain, double x);
 	bool init(void) override;
 	E_TYPE _eType;
 	Vector2 _aim;

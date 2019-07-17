@@ -18,8 +18,8 @@
 #define _dbgDrawCircle(fmt, ...) _DebugDispOut::GetInstance().DrawCircle(fmt,  __VA_ARGS__)
 #define _dbgDrawTriangle(fmt, ...) _DebugDispOut::GetInstance().DrawTriangle(fmt,  __VA_ARGS__)
 #define _dbgDrawPixel(fmt, ...) _DebugDispOut::GetInstance().DrawPixel(fmt,  __VA_ARGS__)
-//#define _dbgDrawFormatString(fmt, ...) _DebugDispOut::GetInstance().DrawFormatString(fmt,  __VA_ARGS__)	
-#define _TdbgDrawFormatString(fmt, ...) _DebugDispOut::GetInstance().SetScreen();\
+//#define _TdbgDrawFormatString(fmt, ...) _DebugDispOut::GetInstance().DrawFormatString(fmt,  __VA_ARGS__)	
+#define _dbgDrawFormatString(fmt, ...) _DebugDispOut::GetInstance().SetScreen();\
 										DxLib::DrawFormatString(fmt, __VA_ARGS__);\
 										_DebugDispOut::GetInstance().RevScreen();
 

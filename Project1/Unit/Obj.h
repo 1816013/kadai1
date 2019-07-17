@@ -40,7 +40,7 @@ public:
 	virtual bool init(void) = 0;		// ｱﾆﾒｰｼｮﾝの初期化初期設定
 	const ANIM animKey(void) const;		// _animKeyの取得
 	bool animKey(const ANIM key);		// _animKeyの設定
-	const Vector2 pos(void) const;		// ｵﾌﾞｼﾞｪｸﾄの座標取得
+	const Vector2_D pos(void) const;		// ｵﾌﾞｼﾞｪｸﾄの座標取得
 	bool isAlive(void) { return _alive; };	// 叙述関数(ﾌﾟﾚﾃﾞｨｹｰﾄ)
 	void setAlive(bool alive);				// 生きているか取得
 	bool isDeath(void) { return _death; };	// 叙述関数(ﾌﾟﾚﾃﾞｨｹｰﾄ)
@@ -54,9 +54,8 @@ protected:
 	bool SetAnim(const ANIM key, AnimVector& data);	// ｱﾆﾒｰｼｮﾝのｾｯﾄ
 	bool isAnimEnd(void);
 	bool DestroyProc(void);
-	Vector2 _pos;						// ｷｬﾗの座標
+	Vector2_D _pos;						// ｷｬﾗの座標
 	Vector2 _size;						// ｷｬﾗのｻｲｽﾞ
-	Vector2 _speed;
 	bool _alive;						// 生きているか
 	bool _death;
 };

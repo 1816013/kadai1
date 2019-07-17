@@ -68,7 +68,7 @@ bool Obj::animKey(const ANIM key)
 	return true;
 }
 
-const Vector2 Obj::pos(void) const
+const Vector2_D Obj::pos(void) const
 {
 	return _pos;
 }

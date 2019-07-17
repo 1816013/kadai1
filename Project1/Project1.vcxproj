@@ -138,7 +138,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Unit\Obj.cpp" />
     <ClCompile Include="Unit\Player.cpp" />
-    <ClCompile Include="common\VECTOR2.cpp" />
     <ClCompile Include="_DebugConOut.cpp" />
     <ClCompile Include="_DebugDispOut.cpp" />
   </ItemGroup>

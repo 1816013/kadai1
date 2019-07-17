@@ -23,14 +23,14 @@ GameScene::~GameScene()
 
 unique_Base GameScene::Update(unique_Base own)
 {
-	Vector2 _pos[6] = 
+	Vector2_D _pos[6] = 
 	{
-		{ 0 - 16, 0  - 16},
-		{ 0 - 16, lpSceneMng.gameScreenSize.y / 2 - 16},
-		{ 0 - 16, lpSceneMng.gameScreenSize.y + 16},
-		{ lpSceneMng.gameScreenSize.x + 16, 0 - 16},
-		{ lpSceneMng.gameScreenSize.x + 16, lpSceneMng.gameScreenSize.y / 2 - 16},
-		{ lpSceneMng.gameScreenSize.x + 16, lpSceneMng.gameScreenSize.y + 16}
+		{ (double)0 - 16,(double)0  - 16},
+		{ (double)0 - 16, (double)lpSceneMng.gameScreenSize.y / 2 - 16},
+		{ (double)0 - 16, (double)lpSceneMng.gameScreenSize.y + 16},
+		{ (double)lpSceneMng.gameScreenSize.x + 16, (double)0 - 16},
+		{ (double)lpSceneMng.gameScreenSize.x + 16,(double)lpSceneMng.gameScreenSize.y / 2 - 16},
+		{ (double)lpSceneMng.gameScreenSize.x + 16, (double)lpSceneMng.gameScreenSize.y + 16}
 	};
 	Vector2 aim[21];
 	for (int y = 0; y < 3; y++)
@@ -104,7 +104,7 @@ void GameScene::EnemyInstance(ENEMY_T state)
 bool GameScene::Init(void)
 {
 	_ghGameScreen = MakeScreen(lpSceneMng.gameScreenSize.x, lpSceneMng.gameScreenSize.y, true);
-	_objList.emplace_back(new Player(Vector2(200, 300), Vector2(30, 32)));
+	_objList.emplace_back(new Player(Vector2_D(200, 300), Vector2(30, 32)));
 	srand(time(NULL));
 	return true;
 }
