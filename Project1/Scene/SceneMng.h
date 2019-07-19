@@ -31,6 +31,7 @@ public:
 	const Vector2 gameScreenSize;	// (500, 390)
 	const Vector2 gameScreenPos;	// (^‚ñ’†)
 
+	int Frame(void);
 private:
 	struct SceneDeleter							// ÃŞØ°À°
 	{
@@ -44,12 +45,16 @@ private:
 
 	bool SysInit(void);	// ¼½ÃÑ‰Šú‰»(Å‰‚Ì‚İ‰Šú‰»‚·‚é‚à‚Ì)
 	void Draw(void);	// •`‰æ‚Ì·­°‚ğ‚à‚Æ‚É•`‰æ‚µ‚Ä‚¢‚­
+	
+
+
 
 	std::vector <DrawQueT> _drawList;	
 
 	// •Ï”
 	static std::unique_ptr<SceneMng, SceneDeleter> s_Instance;		
 	unique_Base _activeScene;					// Œ»İ‚Ì¼°İ
+	int frame = 0;
 
 
 };

@@ -27,6 +27,7 @@ void SceneMng::Run(void)
 		addDrawQue({ IMAGE_ID("òg")[0], 0, 0 });
 		Draw();
 		_dbgStartDrawDebug();
+		frame++;
 	}
 	
 	DxLib_End();
@@ -92,4 +93,9 @@ void SceneMng::Draw(void)
 	}
 	
 	ScreenFlip();	//ó†âÊñ Çï\âÊñ Ç…èuä‘∫Àﬂ∞
+}
+
+int SceneMng::Frame(void)
+{
+	return frame;
 }

@@ -59,11 +59,12 @@ unique_Base GameScene::Update(unique_Base own)
 	if (_newKey && !_lastKey)
 	{
 		int no = _cnt;
-		if (_cnt < 21)
-		{
-			EnemyInstance({ _pos[rand() % 6], Vector2(30, 32),static_cast<E_TYPE>(rand() % static_cast<int>(E_TYPE::MAX)), aim[_cnt] });
-			_cnt++;
-		}
+
+		//eMoveCon.reserve(21);
+		eMoveCon.emplace_back(aim[_cnt], E_MOVE_TYPE::SIGMOID);
+		EnemyInstance({ _pos[rand() % 6], Vector2(30, 32),static_cast<E_TYPE>(rand() % static_cast<int>(E_TYPE::MAX)), eMoveCon }, _cnt);
+		_cnt++;
+	
 		/*_objList.emplace_back(new Enemy(Vector2(30 + (50 * (_cnt % 7)), 32 + (50 * (_cnt / 7))), Vector2(30, 32)));*/
 	}
 
@@ -89,9 +90,11 @@ SCN_ID GameScene::GetSceneID(void)
 	return SCN_ID::GAME;
 }
 
-void GameScene::EnemyInstance(ENEMY_T state)
+void GameScene::EnemyInstance(ENEMY_T state, int cnt)
 {
-	_objList.emplace_back(new Enemy(state));	// 0”Ô–Ú
+	_objList.emplace_back(new Enemy(state, cnt));	// 0”Ô–Ú
+	
+
 	/*for (int y = 0; y < 3; y++)
 	{
 		for (int x = 0; x < 3; x++)
