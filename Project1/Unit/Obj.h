@@ -48,9 +48,10 @@ private:
 	std::map<ANIM, AnimVector> _animMap;
 	ANIM _animKey;						// ±ÆÒ°¼®İ‚Ì–¼‘O
 	int _animFrame;						// ±ÆÒ°¼®İ‚ÌŒ»İ‚ÌºÏ
-	int _animCnt;						// ±ÆÒ°¼®İ‚Ì¶³İÀ
+	
 	bool _animEnd;
 protected:
+	int _animCnt;						// ±ÆÒ°¼®İ‚Ì¶³İÀ
 	bool SetAnim(const ANIM key, AnimVector& data);	// ±ÆÒ°¼®İ‚Ì¾¯Ä
 	bool isAnimEnd(void);
 	bool DestroyProc(void);
@@ -58,5 +59,6 @@ protected:
 	Vector2 _size;						// ·¬×‚Ì»²½Ş
 	bool _alive;						// ¶‚«‚Ä‚¢‚é‚©
 	bool _death;
+
 };
 

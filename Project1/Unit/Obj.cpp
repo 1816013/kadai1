@@ -1,5 +1,6 @@
 #include <DxLib.h>
 #include "Obj.h"
+#include "Enemy.h"
 #include "common/ImageMng.h"
 #include "_DebugDispOut.h"
 

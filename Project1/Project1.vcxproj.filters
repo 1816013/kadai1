@@ -95,5 +95,8 @@
     <ClInclude Include="_DebugDispOut.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="common\details\VECTOR2.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

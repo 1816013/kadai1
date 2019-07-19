@@ -142,6 +142,7 @@
     <ClCompile Include="_DebugDispOut.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="common\details\VECTOR2.h" />
     <ClInclude Include="Input\InputState.h" />
     <ClInclude Include="Input\INPUT_ID.h" />
     <ClInclude Include="Input\KeyState.h" />
