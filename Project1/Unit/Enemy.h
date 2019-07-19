@@ -61,6 +61,7 @@ private:
 	Vector2_D _speed = { 3 , 3 };
 	double Add;
 	Vector2_D _startP;
+	Vector2 Aim;
 
 };
 

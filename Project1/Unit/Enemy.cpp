@@ -29,6 +29,7 @@ Enemy::Enemy(ENEMY_T state, int cnt)
 	_startP = _pos;
 	_alive = true;
 	_death = false;
+	Aim = { 100, lpSceneMng.gameScreenSize.y / 2 - 16 + 50 };
 	move = &Enemy::SetMoveProc;
 	Add = -10;
 	init();
@@ -89,8 +90,8 @@ void Enemy::M_Sigmoid(void)
 {
 	Vector2_D range;
 
-	Vector2 Aim = { 100, lpSceneMng.gameScreenSize.y / 2 - 16 };
-	auto sigmoid = [](double len, double x) { return len / (1.0 + exp(-0.5* x )); };
+	
+	auto sigmoid = [](double ran, double x) { return ran / (1.0 + exp(-1.0 * x )); };
 	Add += 0.1;
 	//range = 300;
 	range = { static_cast<double> (abs(static_cast<int>(_startP.x )- Aim.x)), static_cast<double> (abs(static_cast<int>(_startP.y) - Aim.y)) };
@@ -122,6 +123,10 @@ void Enemy::M_Sigmoid(void)
 				_pos.x -= range.x / 200;
 			}
 		}
+	}
+	if (CheckHitKey(KEY_INPUT_0))
+	{
+		Aim = { 200, lpSceneMng.gameScreenSize.y / 2 - 16 - 100 };
 	}
 
 	//TRACE( "%f  %f\n", Add, sigmoid(range.y, Add)) + _startP.y;
