@@ -75,14 +75,14 @@ void Enemy::EnemyAnim(void)
 
 void Enemy::SetMoveProc(void)
 {
-	move = &Enemy::M_Aiming;
+	move = &Enemy::M_Sigmoid;
 	/*if (_moveCnt < 36000)
 	{
-		move = &Enemy::M_Sigmoid;
+		
 	}
 	else
 	{
-		
+		move = &Enemy::M_Aiming;
 	}*/
 }
 
@@ -107,11 +107,11 @@ void Enemy::M_Sigmoid(void)
 		}
 		if (_startP.x < Aim.x)
 		{
-			_pos.x += 2;
+			_pos.x += range.x / 200;
 		}
 		else
 		{
-			_pos.x -= 2;
+			_pos.x -= range.x / 200;
 		}
 	}
 	else
