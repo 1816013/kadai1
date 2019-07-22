@@ -58,10 +58,10 @@ private:
 	int _aimCnt = 0;
 	int _moveCnt;
 	float _angle;
-	Vector2_D _speed = { 3 , 3 };
+	double _speed = 3;
 	double Add;
 	Vector2_D _startP;
-	Vector2 Aim;
+	Vector2_D Aim;
 
 };
 

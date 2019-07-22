@@ -29,7 +29,7 @@ Enemy::Enemy(ENEMY_T state, int cnt)
 	_startP = _pos;
 	_alive = true;
 	_death = false;
-	Aim = { 100, lpSceneMng.gameScreenSize.y / 2 - 16 + 50 };
+	Aim = {(double) 100, (double)lpSceneMng.gameScreenSize.y / 2 - 16 + 50 };
 	move = &Enemy::SetMoveProc;
 	Add = -10;
 	init();
@@ -75,15 +75,15 @@ void Enemy::EnemyAnim(void)
 
 void Enemy::SetMoveProc(void)
 {
-	
-	if (_moveCnt < 36000)
+	move = &Enemy::M_Aiming;
+	/*if (_moveCnt < 36000)
 	{
 		move = &Enemy::M_Sigmoid;
 	}
 	else
 	{
-		move = &Enemy::M_Aiming;
-	}
+		
+	}*/
 }
 
 void Enemy::M_Sigmoid(void)
@@ -98,36 +98,32 @@ void Enemy::M_Sigmoid(void)
 	if (std::round(_pos.x ) != Aim.x)
 	{
 		if (_startP.y > Aim.y)
-		{
-			if (_startP.x < Aim.x)
-			{
-				_pos.y = sigmoid(-range.y, Add) + _startP.y;
-				_pos.x += range.x / 200;
-			}
-			else
-			{
-				_pos.y = sigmoid(-range.y, Add) + _startP.y;
-				_pos.x -= range.x / 200;
-			}
+		{ 
+			_pos.y = sigmoid(-range.y, Add) + _startP.y;
 		}
 		else
 		{
-			if (_startP.x < Aim.x)
-			{
-				_pos.y = sigmoid(range.y, Add) + _startP.y;
-				_pos.x += range.x / 200;
-			}
-			else
-			{
-				_pos.y = sigmoid(range.y, Add) + _startP.y;
-				_pos.x -= range.x / 200;
-			}
+			_pos.y = sigmoid(range.y, Add) + _startP.y;
+		}
+		if (_startP.x < Aim.x)
+		{
+			_pos.x += 2;
+		}
+		else
+		{
+			_pos.x -= 2;
 		}
 	}
-	if (CheckHitKey(KEY_INPUT_0))
+	else
 	{
-		Aim = { 200, lpSceneMng.gameScreenSize.y / 2 - 16 - 100 };
+		//move = &Enemy::M_Aiming;
 	}
+	/*if (CheckHitKey(KEY_INPUT_0))
+	{
+		_startP = Aim;
+		Aim = { (double)300, (double)lpSceneMng.gameScreenSize.y / 2 - 16 - 100 };
+		
+	}*/
 
 	//TRACE( "%f  %f\n", Add, sigmoid(range.y, Add)) + _startP.y;
 	//move = &Enemy::SetMoveProc;
@@ -135,33 +131,12 @@ void Enemy::M_Sigmoid(void)
 
 void Enemy::M_Aiming(void)
 {
-	// ’´‚¦‚»‚¤‚É‚È‚Á‚½‚ç½Ëß°ÄÞ’²®
-	if (abs(_aim[_aimCnt].first.x - _pos.x) < _speed.x)
+	if (std::round(_pos.x) != Aim.x || std::round(_pos.y) != Aim.y)
 	{
-		_speed.x = abs(_aim[_aimCnt].first.x - _pos.x);
+		_angle = atan2(_aim[_aimCnt % 21].first.y - _pos.y, _aim[_aimCnt % 21].first.x - _pos.x);
+		_pos.x += cos(_angle) * _speed;
+		_pos.y += sin(_angle) * _speed;
 	}
-	if (abs(_aim[_aimCnt].first.x - _pos.y) < _speed.y)
-	{
-		_speed.y = abs(_aim[_aimCnt].first.y - _pos.y);
-	}
-	// –Ú“I’n‚ÉŒü‚©‚¤
-	if (_pos.x < _aim[_aimCnt].first.x)
-	{
-		_pos.x += _speed.x;
-	}
-	else
-	{
-		_pos.x -= _speed.x;
-	}
-	if (_pos.y < _aim[_aimCnt].first.y)
-	{
-		_pos.y += _speed.y;
-	}
-	else
-	{
-		_pos.y -= _speed.y;
-	}
-	//move = &Enemy::SetMoveProc;
 }
 
 void Enemy::M_Swirl(void)
