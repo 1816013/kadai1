@@ -32,6 +32,8 @@ Enemy::Enemy(ENEMY_T state, int cnt)
 	Aim = {(double) 100, (double)lpSceneMng.gameScreenSize.y / 2 - 16 + 50 };
 	move = &Enemy::SetMoveProc;
 	Add = -10;
+	_angle = 0;
+	AddAngle = 0;
 	init();
 	TRACE("enemyÇÃê∂ê¨\n");
 }
@@ -89,14 +91,12 @@ void Enemy::SetMoveProc(void)
 void Enemy::M_Sigmoid(void)
 {
 	Vector2_D range;
-
-	
 	auto sigmoid = [](double ran, double x) { return ran / (1.0 + exp(-1.0 * x )); };
 	Add += 0.1;
-	//range = 300;
 	range = { static_cast<double> (abs(static_cast<int>(_startP.x )- Aim.x)), static_cast<double> (abs(static_cast<int>(_startP.y) - Aim.y)) };
 	if (std::round(_pos.x ) != Aim.x)
 	{
+		// yê≥ãKâªÉVÉOÉÇÉCÉhÇÕç≈èâÇ©ÇÁyÇÕê≥ãKâªÇ≥ÇÍÇƒÇ¢ÇÈ
 		if (_startP.y > Aim.y)
 		{ 
 			_pos.y = sigmoid(-range.y, Add) + _startP.y;
@@ -105,25 +105,29 @@ void Enemy::M_Sigmoid(void)
 		{
 			_pos.y = sigmoid(range.y, Add) + _startP.y;
 		}
+		//	xê≥ãKâª(Add + 10) / 20Å@=  (0.0 Å` 1.0 Å` Åá)
+							//  Add =   -10 Å`  10 Å` Åá
 		if (_startP.x < Aim.x)
 		{
-			_pos.x += range.x / 200;
+			_pos.x = (Add + 10) / 20 * range.x + _startP.x;			
 		}
 		else
 		{
-			_pos.x -= range.x / 200;
+			_pos.x = (Add + 10 ) / 20 * -range.x + _startP.x;
 		}
 	}
 	else
 	{
-		//move = &Enemy::M_Aiming;
+		move = &Enemy::M_Swirl;
 	}
-	/*if (CheckHitKey(KEY_INPUT_0))
+	_lastKey = _newKey;
+	_newKey = CheckHitKey(KEY_INPUT_0);
+	if (_newKey && !_lastKey)
 	{
-		_startP = Aim;
-		Aim = { (double)300, (double)lpSceneMng.gameScreenSize.y / 2 - 16 - 100 };
-		
-	}*/
+		_startP = _pos;
+ 		Aim = { (double)300, (double)lpSceneMng.gameScreenSize.y / 2 - 16 - 100 };
+		Add = -10;
+	}
 
 	//TRACE( "%f  %f\n", Add, sigmoid(range.y, Add)) + _startP.y;
 	//move = &Enemy::SetMoveProc;
@@ -141,6 +145,21 @@ void Enemy::M_Aiming(void)
 
 void Enemy::M_Swirl(void)
 {
+	if (!CheckHitKey(KEY_INPUT_SPACE))
+	{
+		_angle += (3.5 + AddAngle) * DX_PI / 180;
+	}
+	else
+	{
+		_angle += 4 * DX_PI / 180;
+	}
+	_pos.x += cos(_angle) * _speed * 2;
+	_pos.y += sin(_angle) * _speed * 2;
+	AddAngle += 0.01;
+	if (_angle > abs(540 * DX_PI / 180 ))
+	{
+		move = &Enemy::M_Aiming;
+	}
 }
 
 

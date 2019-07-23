@@ -60,8 +60,11 @@ private:
 	float _angle;
 	double _speed = 3;
 	double Add;
+	double AddAngle;
 	Vector2_D _startP;
 	Vector2_D Aim;
+	bool _newKey;
+	bool _lastKey;
 
 };
 
