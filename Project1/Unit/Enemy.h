@@ -38,7 +38,7 @@ class Enemy :
 {
 public:
 	Enemy();								// ºİ½Ä×¸À
-	Enemy(ENEMY_T state, int cnt);					// ˆø”•t‚«ºİ½Ä×¸À
+	Enemy(const ENEMY_T& state, int cnt);					// ˆø”•t‚«ºİ½Ä×¸À
 	~Enemy();								// ÃŞ½Ä×¸À
 
 	void Draw(void) override;				// ´ÈĞ°‚Ì•`‰æ

@@ -18,7 +18,7 @@ Enemy::Enemy()
 	move = &Enemy::SetMoveProc;
 }
 
-Enemy::Enemy(ENEMY_T state, int cnt)
+Enemy::Enemy(const ENEMY_T& state, int cnt)
 {
 	_eType = std::get<static_cast<int>(E_STATE::TYPE)>(state);
 	_pos = std::get<static_cast<int>(E_STATE::VECTOR)>(state);
@@ -93,28 +93,14 @@ void Enemy::M_Sigmoid(void)
 	Vector2_D range;
 	auto sigmoid = [](double ran, double x) { return ran / (1.0 + exp(-1.0 * x )); };
 	Add += 0.1;
-	range = { static_cast<double> (abs(static_cast<int>(_startP.x )- Aim.x)), static_cast<double> (abs(static_cast<int>(_startP.y) - Aim.y)) };
+	range = { Aim.x -  _startP.x , Aim.y - _startP.y  };
 	if (std::round(_pos.x ) != Aim.x)
 	{
-		// yê≥ãKâªÉVÉOÉÇÉCÉhÇÕç≈èâÇ©ÇÁyÇÕê≥ãKâªÇ≥ÇÍÇƒÇ¢ÇÈ
-		if (_startP.y > Aim.y)
-		{ 
-			_pos.y = sigmoid(-range.y, Add) + _startP.y;
-		}
-		else
-		{
-			_pos.y = sigmoid(range.y, Add) + _startP.y;
-		}
 		//	xê≥ãKâª(Add + 10) / 20Å@=  (0.0 Å` 1.0 Å` Åá)
 							//  Add =   -10 Å`  10 Å` Åá
-		if (_startP.x < Aim.x)
-		{
-			_pos.x = (Add + 10) / 20 * range.x + _startP.x;			
-		}
-		else
-		{
-			_pos.x = (Add + 10 ) / 20 * -range.x + _startP.x;
-		}
+		_pos.x = (Add + 10) / 20 * range.x + _startP.x;
+		// yê≥ãKâªÉVÉOÉÇÉCÉhÇÕç≈èâÇ©ÇÁyÇÕê≥ãKâªÇ≥ÇÍÇƒÇ¢ÇÈ
+		_pos.y = sigmoid(range.y, Add) + _startP.y;
 	}
 	else
 	{
@@ -145,17 +131,11 @@ void Enemy::M_Aiming(void)
 
 void Enemy::M_Swirl(void)
 {
-	if (!CheckHitKey(KEY_INPUT_SPACE))
-	{
-		_angle += (3.5 + AddAngle) * DX_PI / 180;
-	}
-	else
-	{
-		_angle += 4 * DX_PI / 180;
-	}
+	
+	_angle += (3.5 + AddAngle) * DX_PI / 180;
 	_pos.x += cos(_angle) * _speed * 2;
 	_pos.y += sin(_angle) * _speed * 2;
-	AddAngle += 0.01;
+	AddAngle += 0.05;
 	if (_angle > abs(540 * DX_PI / 180 ))
 	{
 		move = &Enemy::M_Aiming;
