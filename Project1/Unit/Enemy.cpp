@@ -131,10 +131,9 @@ void Enemy::M_Aiming(void)
 
 void Enemy::M_Swirl(void)
 {
-	
 	_angle += (3.5 + AddAngle) * DX_PI / 180;
-	_pos.x += cos(_angle) * _speed * 2;
-	_pos.y += sin(_angle) * _speed * 2;
+	_pos.x += cos(_angle) * -_speed * 2;
+	_pos.y += sin(_angle) * _speed * 2 ;
 	AddAngle += 0.05;
 	if (_angle > abs(540 * DX_PI / 180 ))
 	{
