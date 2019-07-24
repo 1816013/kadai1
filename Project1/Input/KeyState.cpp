@@ -79,7 +79,7 @@ void KeyState::RefKeyData(void)
 	}
 	/*state(INPUT_ID::LEFT, _buf[KEY_INPUT_LEFT]);
 	state(INPUT_ID::RIGHT, _buf[KEY_INPUT_RIGHT]);
-	state(INPUT_ID::UP, _buf[KEY_INPUT_UP]);
+	state(INPUT_ID::AIMING, _buf[KEY_INPUT_UP]);
 	state(INPUT_ID::DOWN, _buf[KEY_INPUT_DOWN]);
 	state(INPUT_ID::BTN_1, _buf[KEY_INPUT_Z]);
 	state(INPUT_ID::BTN_2 , _buf[KEY_INPUT_X]);

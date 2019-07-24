@@ -14,23 +14,20 @@ Enemy::Enemy()
 	init();
 	_alive = true;
 	_death = false;
-	_moveCnt = 0;
-	move = &Enemy::SetMoveProc;
 }
 
-Enemy::Enemy(const ENEMY_T& state, int cnt)
+Enemy::Enemy(const ENEMY_T& state)
 {
 	_eType = std::get<static_cast<int>(E_STATE::TYPE)>(state);
 	_pos = std::get<static_cast<int>(E_STATE::VECTOR)>(state);
 	//_pos = { 0,350 };
 	_size = std::get<static_cast<int>(E_STATE::SIZE)>(state);
 	_aim = std::get<static_cast<int>(E_STATE::AIM)>(state);
-	_aimCnt = cnt;
+	WaitTime = std::get<static_cast<int>(E_STATE::WAITC)>(state);
 	_startP = _pos;
 	_alive = true;
 	_death = false;
-	Aim = {(double) 100, (double)lpSceneMng.gameScreenSize.y / 2 - 16 + 50 };
-	move = &Enemy::SetMoveProc;
+	Aim = {(double) 100, (double)lpSceneMng.gameScreenSize.y / 2 - 16 };
 	Add = -10;
 	_angle = 0;
 	AddAngle = 0;
@@ -60,9 +57,8 @@ void Enemy::Update(void)
 		_alive = false;
 		animKey(ANIM::DEATH);
 	}*/
-	
+ 	SetMoveProc();
 	(this->*move)();
-	_moveCnt++;
 }
 
 UNIT Enemy::GetUnitType(void)
@@ -77,7 +73,22 @@ void Enemy::EnemyAnim(void)
 
 void Enemy::SetMoveProc(void)
 {
-	move = &Enemy::M_Sigmoid;
+	if (_aim[_aimCnt].second == E_MOVE_TYPE::WAIT)
+	{
+		move = &Enemy::M_Wait;
+	}
+	if (_aim[_aimCnt].second == E_MOVE_TYPE::SIGMOID)
+	{
+		move = &Enemy::M_Sigmoid;
+	}
+	if (_aim[_aimCnt].second == E_MOVE_TYPE::SWIRL)
+	{
+		move = &Enemy::M_Swirl;
+	}
+	if (_aim[_aimCnt].second == E_MOVE_TYPE::AIMING)
+	{
+		move = &Enemy::M_Aiming;
+	}
 	/*if (_moveCnt < 36000)
 	{
 		
@@ -92,9 +103,9 @@ void Enemy::M_Sigmoid(void)
 {
 	Vector2_D range;
 	auto sigmoid = [](double ran, double x) { return ran / (1.0 + exp(-1.0 * x )); };
-	Add += 0.1;
-	range = { Aim.x -  _startP.x , Aim.y - _startP.y  };
-	if (std::round(_pos.x ) != Aim.x)
+	Add += 0.2; 
+	range = { _aim[_aimCnt].first.x -  _startP.x , _aim[_aimCnt].first.y - _startP.y  };
+	if (Add <= 10.0)
 	{
 		//	x³‹K‰»(Add + 10) / 20@=  (0.0 ` 1.0 ` ‡)
 							//  Add =   -10 `  10 ` ‡
@@ -104,41 +115,55 @@ void Enemy::M_Sigmoid(void)
 	}
 	else
 	{
-		move = &Enemy::M_Swirl;
-	}
-	_lastKey = _newKey;
-	_newKey = CheckHitKey(KEY_INPUT_0);
-	if (_newKey && !_lastKey)
-	{
-		_startP = _pos;
- 		Aim = { (double)300, (double)lpSceneMng.gameScreenSize.y / 2 - 16 - 100 };
 		Add = -10;
+		_startP = _pos;
+		//move = &Enemy::SetMoveProc;
+		_aimCnt++;
+		
 	}
-
 	//TRACE( "%f  %f\n", Add, sigmoid(range.y, Add)) + _startP.y;
 	//move = &Enemy::SetMoveProc;
 }
 
 void Enemy::M_Aiming(void)
 {
-	if (std::round(_pos.x) != Aim.x || std::round(_pos.y) != Aim.y)
+
+	_angle = atan2(_aim[_aimCnt].first.y - _pos.y, _aim[_aimCnt].first.x - _pos.x);
+	if (abs((int)_aim[_aimCnt].first.x - _pos.x) < _speed.x)
 	{
-		_angle = atan2(_aim[_aimCnt % 21].first.y - _pos.y, _aim[_aimCnt % 21].first.x - _pos.x);
-		_pos.x += cos(_angle) * _speed;
-		_pos.y += sin(_angle) * _speed;
+		_speed.x = abs((int)_aim[_aimCnt].first.x - _pos.x);
 	}
+	if (abs((int)_aim[_aimCnt].first.y - _pos.y) < _speed.y)
+	{
+		_speed.y = abs((int)_aim[_aimCnt].first.y - _pos.y);
+	}
+
+	_pos.x += cos(_angle) * _speed.x;
+	_pos.y += sin(_angle) * _speed.y;
+	
 }
 
 void Enemy::M_Swirl(void)
 {
 	_angle += (3.5 + AddAngle) * DX_PI / 180;
-	_pos.x += cos(_angle) * -_speed * 2;
-	_pos.y += sin(_angle) * _speed * 2 ;
+	_pos.x += cos(_angle) * -_speed.x * 2;
+	_pos.y -= sin(_angle) * _speed.y * 2 ;
 	AddAngle += 0.05;
 	if (_angle > abs(540 * DX_PI / 180 ))
 	{
-		move = &Enemy::M_Aiming;
+		//move = &Enemy::SetMoveProc;
+		_aimCnt++;
 	}
+}
+
+void Enemy::M_Wait(void)
+{
+	if (WaitTime < WaitCnt)
+	{
+		//move = &Enemy::SetMoveProc;
+		_aimCnt++;
+	}
+	WaitCnt++;
 }
 
 

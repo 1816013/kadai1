@@ -51,7 +51,7 @@ void Player::Update(void)
 	{
 		_pos.x++;
 	}
-	if (_inputState->state(INPUT_ID::UP).first)
+	if (_inputState->state(INPUT_ID::AIMING).first)
 	{
 		_pos.y--;
 	}

@@ -25,7 +25,7 @@ class Obj;
 using unique_Obj = std::unique_ptr<Obj>;	
 using shared_Obj = std::shared_ptr<Obj>;
 
-using AnimVector = std::vector<std::pair<int, int>>;
+using AnimVector = std::vector<std::pair<int, int>>;	//
 				 //std::vector<std::vector<int>>
 				 //std::vector<std::array<2,int>>
 class Obj
@@ -48,7 +48,6 @@ private:
 	std::map<ANIM, AnimVector> _animMap;
 	ANIM _animKey;						// ±∆“∞ºÆ›ÇÃñºëO
 	int _animFrame;						// ±∆“∞ºÆ›ÇÃåªç›ÇÃ∫œ
-	
 	bool _animEnd;
 protected:
 	int _animCnt;						// ±∆“∞ºÆ›ÇÃ∂≥›¿

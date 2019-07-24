@@ -4,7 +4,7 @@ enum class INPUT_ID
 {
 	LEFT,	// ©
 	RIGHT,	// ¨
-	UP,		// ª
+	AIMING,		// ª
 	DOWN,	// «
 	BTN_1,	// z
 	BTN_2,	// x

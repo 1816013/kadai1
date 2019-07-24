@@ -27,43 +27,53 @@ unique_Base GameScene::Update(unique_Base own)
 	{
 		{ (double)0 - 16,(double)0  - 16},
 		{ (double)0 - 16, (double)lpSceneMng.gameScreenSize.y / 2 - 16},
-		{ (double)0 - 16, (double)lpSceneMng.gameScreenSize.y + 16},
+		{ (double)0 - 16, (double)lpSceneMng.gameScreenSize.y - 48},
 		{ (double)lpSceneMng.gameScreenSize.x + 16, (double)0 - 16},
 		{ (double)lpSceneMng.gameScreenSize.x + 16,(double)lpSceneMng.gameScreenSize.y / 2 - 16},
-		{ (double)lpSceneMng.gameScreenSize.x + 16, (double)lpSceneMng.gameScreenSize.y + 16}
+		{ (double)lpSceneMng.gameScreenSize.x + 16, (double)lpSceneMng.gameScreenSize.y - 48}
 	};
-	Vector2 aim[21];
+	Vector2_D aim[21];
 	for (int y = 0; y < 3; y++)
 	{
 		for (int x = 0; x < 7; x++)
 		{
-			aim[y * 7 + x] = { 50 + (x * 50), 50 + (y * 50) };
+			aim[y * 7 + x] = {(double) 32 + (x * 32), (double)32 + (y * 32) };
 		}
 	}
-	
-	/*int KeyData[10] = {
-		KEY_INPUT_NUMPAD0,
-		KEY_INPUT_NUMPAD1,
-		KEY_INPUT_NUMPAD2,
-		KEY_INPUT_NUMPAD3,
-		KEY_INPUT_NUMPAD4,
-		KEY_INPUT_NUMPAD5,
-		KEY_INPUT_NUMPAD6,
-		KEY_INPUT_NUMPAD7,
-		KEY_INPUT_NUMPAD8,
-		KEY_INPUT_NUMPAD9
-	};*/
+
+	Vector2_D sigAim[2];
+	Vector2_D sigAim2[2];
+	sigAim[0] = {(double)100, (double)lpSceneMng.gameScreenSize.y / 2 - 16 };
+	sigAim2[0] = { (double)200, (double)lpSceneMng.gameScreenSize.y - 48 };
+	sigAim[1] = {(double)400, (double)lpSceneMng.gameScreenSize.y / 2 - 16 };
+	sigAim2[1] = { (double)300, (double)lpSceneMng.gameScreenSize.y - 48 };
 	//newKey[i] & ~oldKey[i];
 	_lastKey = _newKey;
 	_newKey = CheckHitKey(KEY_INPUT_R);
 	if (_newKey && !_lastKey)
 	{
-		int no = _cnt;
+		int no = rand() % 6;
+		if (no < 3)
+		{
+			eMoveCon.emplace_back(sigAim[0], E_MOVE_TYPE::WAIT);
+			eMoveCon.emplace_back(sigAim[0], E_MOVE_TYPE::SIGMOID);
+			eMoveCon.emplace_back(sigAim2[0], E_MOVE_TYPE::SIGMOID);
+			eMoveCon.emplace_back(sigAim2[0], E_MOVE_TYPE::SWIRL);
+		}
+		else
+		{
+			eMoveCon.emplace_back(sigAim[0], E_MOVE_TYPE::WAIT);
+			eMoveCon.emplace_back(sigAim[1], E_MOVE_TYPE::SIGMOID);
+			eMoveCon.emplace_back(sigAim2[1], E_MOVE_TYPE::SIGMOID);
+			eMoveCon.emplace_back(sigAim2[1], E_MOVE_TYPE::SWIRL);
+		}
+		
+		eMoveCon.emplace_back(aim[_cnt % 21], E_MOVE_TYPE::AIMING);
 
-		//eMoveCon.reserve(21);
-		eMoveCon.emplace_back(aim[_cnt], E_MOVE_TYPE::SIGMOID);
-		EnemyInstance({ _pos[rand() % 6], Vector2(30, 32),static_cast<E_TYPE>(rand() % static_cast<int>(E_TYPE::MAX)), eMoveCon }, _cnt);
-		_cnt++;
+		EnemyInstance({ _pos[no], Vector2(30, 32),static_cast<E_TYPE>(rand() % static_cast<int>(E_TYPE::MAX)), move(eMoveCon), 0}, no);
+		//EnemyInstance({ _pos[no], Vector2(30, 32),static_cast<E_TYPE>(rand() % static_cast<int>(E_TYPE::MAX)), move(eMoveCon), 40}, no);
+		//EnemyInstance({ _pos[no], Vector2(30, 32),static_cast<E_TYPE>(rand() % static_cast<int>(E_TYPE::MAX)), move(eMoveCon), 80 }, no);
+		
 	
 		/*_objList.emplace_back(new Enemy(Vector2(30 + (50 * (_cnt % 7)), 32 + (50 * (_cnt / 7))), Vector2(30, 32)));*/
 	}
@@ -90,11 +100,10 @@ SCN_ID GameScene::GetSceneID(void)
 	return SCN_ID::GAME;
 }
 
-void GameScene::EnemyInstance(ENEMY_T state, int cnt)
+void GameScene::EnemyInstance(ENEMY_T state, int no)
 {
-	_objList.emplace_back(new Enemy(state, cnt));	// 0”Ô–Ú
-	
-
+	_objList.emplace_back(new Enemy(state));	// 0”Ô–Ú
+	_cnt++;
 	/*for (int y = 0; y < 3; y++)
 	{
 		for (int x = 0; x < 3; x++)

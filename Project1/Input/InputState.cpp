@@ -11,7 +11,7 @@ InputState::InputState()
 	/*
 	_state.try_emplace(INPUT_ID::LEFT, std::make_pair(0, 1));
 	_state.try_emplace(INPUT_ID::RIGHT, std::make_pair(0, 1));
-	_state.try_emplace(INPUT_ID::UP, std::make_pair(0, 1));
+	_state.try_emplace(INPUT_ID::AIMING, std::make_pair(0, 1));
 	_state.try_emplace(INPUT_ID::DOWN, std::make_pair(0, 1));
 	_state.try_emplace(INPUT_ID::BTN_1, std::make_pair(0, 1));
 	_state.try_emplace(INPUT_ID::BTN_2, std::make_pair(0, 1));

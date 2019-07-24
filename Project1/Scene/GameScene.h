@@ -17,13 +17,16 @@ public:
 	unique_Base Update(unique_Base own) override;	// Še±¯ÌßÃŞ°Ä‚ğ‚Ü‚Æ‚ß‚é
 	void Draw(void);			// ¹Ş°Ñ½¸Ø°İ‚Å‚Ì•`‰æ
 	SCN_ID GetSceneID(void);	// ¡‚Ç‚±‚Ì¼°İ
-	void EnemyInstance(ENEMY_T state ,int cnt);
+	void EnemyInstance(ENEMY_T state, int no);
 private:
 	std::vector<shared_Obj> _objList;	// ·¬×Ši”[—p
 	int _ghGameScreen;			// ¹Ş°Ñ—p½¸Ø°İ
 	bool Init(void);			// ²İ½Àİ½‚È‚Ç‚Ì‰Šú‰»
 	int _cnt;
 	E_AIM eMoveCon;
+	Vector2_D aim[21];
+	Vector2_D sigAim[2];
+	Vector2_D sigAim2[2];
 	bool _newKey;
 	bool _lastKey;
 };
