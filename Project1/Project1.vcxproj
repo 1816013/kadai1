@@ -138,6 +138,7 @@
     <ClCompile Include="Input\InputState.cpp" />
     <ClCompile Include="Input\INPUT_ID.cpp" />
     <ClCompile Include="Input\KeyState.cpp" />
+    <ClCompile Include="Shot.cpp" />
     <ClCompile Include="Unit\Enemy.cpp" />
     <ClCompile Include="common\ImageMng.cpp" />
     <ClCompile Include="Scene\SceneMng.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="Input\KeyState.h" />
     <ClInclude Include="Scene\SceneMng.h" />
     <ClInclude Include="Scene\BaseScene.h" />
+    <ClInclude Include="Shot.h" />
     <ClInclude Include="Unit\Enemy.h" />
     <ClInclude Include="common\ImageMng.h" />
     <ClInclude Include="Scene\GameScene.h" />

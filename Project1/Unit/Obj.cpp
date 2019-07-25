@@ -37,8 +37,14 @@ void Obj::Draw(void)
 			_animCnt = 0;
 		}
 	}
-
-	DrawRotaGraph(_pos.x, _pos.y, 1.0, 0, _animMap[_animKey][_animFrame].first, true);
+	if (_animMap[_animKey][_animFrame].first != IMAGE_ID("’e")[0] && _animMap[_animKey][_animFrame].first != IMAGE_ID("’e")[1])
+	{
+		DrawRotaGraph(_pos.x, _pos.y, 1.0, 0, _animMap[_animKey][_animFrame].first, true);
+	}
+	else
+	{
+		DrawRotaGraph(_pos.x, _pos.y, 2.0, 0, _animMap[_animKey][_animFrame].first, true);
+	}
 	//_dbgDrawBox(_pos.x, _pos.y, _pos.x + _size.x, _pos.y + _size.y, 0x00ff00, true);
 	_animCnt++;
 }

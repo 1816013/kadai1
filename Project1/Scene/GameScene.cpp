@@ -5,6 +5,7 @@
 #include "SceneMng.h"
 #include <Unit/Player.h>
 #include <Unit/Enemy.h>
+#include "Shot.h"
 #include "_DebugConOut.h"
 
 
@@ -43,46 +44,49 @@ unique_Base GameScene::Update(unique_Base own)
 
 	Vector2_D sigAim[2];
 	Vector2_D sigAim2[2];
-	sigAim[0] = {(double)100, (double)lpSceneMng.gameScreenSize.y / 2 - 16 };
-	sigAim2[0] = { (double)200, (double)lpSceneMng.gameScreenSize.y - 48 };
-	sigAim[1] = {(double)400, (double)lpSceneMng.gameScreenSize.y / 2 - 16 };
-	sigAim2[1] = { (double)300, (double)lpSceneMng.gameScreenSize.y - 48 };
-	//newKey[i] & ~oldKey[i];
+	sigAim[1] = {(double)300, (double)lpSceneMng.gameScreenSize.y / 2 - 16 };
+	sigAim[0] = {(double)200, (double)lpSceneMng.gameScreenSize.y / 2 - 16 };
+	sigAim2[1] = { (double)100, (double)lpSceneMng.gameScreenSize.y - 48 };
+	sigAim2[0] = { (double)400, (double)lpSceneMng.gameScreenSize.y - 48 };
+
 	_lastKey = _newKey;
 	_newKey = CheckHitKey(KEY_INPUT_R);
 	if (_newKey && !_lastKey)
 	{
 		int no = rand() % 6;
-		if (no < 3)
+		for (int i = 0; i < 3; i++)
 		{
-			eMoveCon.emplace_back(sigAim[0], E_MOVE_TYPE::WAIT);
-			eMoveCon.emplace_back(sigAim[0], E_MOVE_TYPE::SIGMOID);
-			eMoveCon.emplace_back(sigAim2[0], E_MOVE_TYPE::SIGMOID);
-			eMoveCon.emplace_back(sigAim2[0], E_MOVE_TYPE::SWIRL);
-		}
-		else
-		{
-			eMoveCon.emplace_back(sigAim[0], E_MOVE_TYPE::WAIT);
-			eMoveCon.emplace_back(sigAim[1], E_MOVE_TYPE::SIGMOID);
-			eMoveCon.emplace_back(sigAim2[1], E_MOVE_TYPE::SIGMOID);
-			eMoveCon.emplace_back(sigAim2[1], E_MOVE_TYPE::SWIRL);
-		}
-		
-		eMoveCon.emplace_back(aim[_cnt % 21], E_MOVE_TYPE::AIMING);
+			
+			if (no < 3)
+			{
+				eMoveCon.emplace_back(sigAim[0], E_MOVE_TYPE::WAIT);
+				eMoveCon.emplace_back(sigAim[0], E_MOVE_TYPE::SIGMOID);
+				eMoveCon.emplace_back(sigAim2[0], E_MOVE_TYPE::SIGMOID);
+				eMoveCon.emplace_back(sigAim2[0], E_MOVE_TYPE::SWIRL);
+			}
+			else
+			{
+				eMoveCon.emplace_back(sigAim[0], E_MOVE_TYPE::WAIT);
+				eMoveCon.emplace_back(sigAim[1], E_MOVE_TYPE::SIGMOID);
+				eMoveCon.emplace_back(sigAim2[1], E_MOVE_TYPE::SIGMOID);
+				eMoveCon.emplace_back(sigAim2[1], E_MOVE_TYPE::SWIRL);
+			}
 
-		EnemyInstance({ _pos[no], Vector2(30, 32),static_cast<E_TYPE>(rand() % static_cast<int>(E_TYPE::MAX)), move(eMoveCon), 0}, no);
-		//EnemyInstance({ _pos[no], Vector2(30, 32),static_cast<E_TYPE>(rand() % static_cast<int>(E_TYPE::MAX)), move(eMoveCon), 40}, no);
-		//EnemyInstance({ _pos[no], Vector2(30, 32),static_cast<E_TYPE>(rand() % static_cast<int>(E_TYPE::MAX)), move(eMoveCon), 80 }, no);
-		
-	
-		/*_objList.emplace_back(new Enemy(Vector2(30 + (50 * (_cnt % 7)), 32 + (50 * (_cnt / 7))), Vector2(30, 32)));*/
+			eMoveCon.emplace_back(aim[_cnt % 21], E_MOVE_TYPE::AIMING);
+
+			EnemyInstance({ _pos[no], Vector2(30, 32),static_cast<E_TYPE>(rand() % static_cast<int>(E_TYPE::MAX)), move(eMoveCon), i * 15 }, no);
+		}
 	}
+	
 
-
-
+	Vector2_D pPos;
 	for (auto& itr : _objList)		// ”ÍˆÍfor•¶shared_ptr‚ðŽg‚¤‚Æ‚Å‚«‚éunique_ptr‚Å‚àauto&‚ðŽg‚¦‚Î‚Å‚«‚é
 	{
 		itr->Update();
+		if (itr->GetUnitType() == UNIT::PLAYER)
+		{
+			pPos = itr->pos();
+		}
 	}
 	_objList.erase(std::remove_if(
 				   _objList.begin(),
@@ -90,6 +94,10 @@ unique_Base GameScene::Update(unique_Base own)
 					[](shared_Obj& obj) { return (*obj).isDeath(); }), 
 				   _objList.end());
 
+	if (CheckHitKey(KEY_INPUT_SPACE))
+	{
+		_objList.emplace_back(new Shot(pPos, Vector2(3, 6)));
+	}
 	Draw();
 
 	return std::move(own);
@@ -117,6 +125,7 @@ bool GameScene::Init(void)
 {
 	_ghGameScreen = MakeScreen(lpSceneMng.gameScreenSize.x, lpSceneMng.gameScreenSize.y, true);
 	_objList.emplace_back(new Player(Vector2_D(200, 300), Vector2(30, 32)));
+	
 	srand(time(NULL));
 	return true;
 }

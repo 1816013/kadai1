@@ -18,6 +18,7 @@ enum class UNIT
 {
 	PLAYER,
 	ENEMY,
+	SHOT,
 	MAX
 };
 
@@ -25,7 +26,7 @@ class Obj;
 using unique_Obj = std::unique_ptr<Obj>;	
 using shared_Obj = std::shared_ptr<Obj>;
 
-using AnimVector = std::vector<std::pair<int, int>>;	//
+using AnimVector = std::vector<std::pair<int, int>>;	//@ˆê‚Â–Ú‚Ìˆø”‚ÍÊİÄŞÙ“ñ‚Â–Ú‚Ìˆø”‚Í¶³İÀ
 				 //std::vector<std::vector<int>>
 				 //std::vector<std::array<2,int>>
 class Obj

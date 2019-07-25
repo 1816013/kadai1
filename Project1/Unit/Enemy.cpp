@@ -109,7 +109,7 @@ void Enemy::M_Sigmoid(void)
 	{
 		//	xê≥ãKâª(Add + 10) / 20Å@=  (0.0 Å` 1.0 Å` Åá)
 							//  Add =   -10 Å`  10 Å` Åá
-		_pos.x = (Add + 10) / 20 * range.x + _startP.x;
+		_pos.x = (Add + 10 ) / 20 * range.x + _startP.x;
 		// yê≥ãKâªÉVÉOÉÇÉCÉhÇÕç≈èâÇ©ÇÁyÇÕê≥ãKâªÇ≥ÇÍÇƒÇ¢ÇÈ
 		_pos.y = sigmoid(range.y, Add) + _startP.y;
 	}
@@ -117,7 +117,6 @@ void Enemy::M_Sigmoid(void)
 	{
 		Add = -10;
 		_startP = _pos;
-		//move = &Enemy::SetMoveProc;
 		_aimCnt++;
 		
 	}
@@ -145,13 +144,21 @@ void Enemy::M_Aiming(void)
 
 void Enemy::M_Swirl(void)
 {
-	_angle += (3.5 + AddAngle) * DX_PI / 180;
-	_pos.x += cos(_angle) * -_speed.x * 2;
-	_pos.y -= sin(_angle) * _speed.y * 2 ;
+	_angle += (4.5 + AddAngle) * DX_PI / 180;
 	AddAngle += 0.05;
+	if (_startP.x < lpSceneMng.gameScreenSize.x / 2)
+	{
+		_pos.x += cos(_angle) * -_speed.x * 2;
+		_pos.y -= sin(_angle) * _speed.y * 2;
+	}
+	else
+	{
+		_pos.x += cos(_angle) * _speed.x * 2;
+		_pos.y -= sin(_angle) * _speed.y * 2;
+		
+	}
 	if (_angle > abs(540 * DX_PI / 180 ))
 	{
-		//move = &Enemy::SetMoveProc;
 		_aimCnt++;
 	}
 }
@@ -160,7 +167,6 @@ void Enemy::M_Wait(void)
 {
 	if (WaitTime < WaitCnt)
 	{
-		//move = &Enemy::SetMoveProc;
 		_aimCnt++;
 	}
 	WaitCnt++;
