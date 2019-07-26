@@ -12,7 +12,7 @@ std::unique_ptr<SceneMng, SceneMng::SceneDeleter> SceneMng::s_Instance(new Scene
 void SceneMng::Run(void)
 {
 	SysInit();
-	ImageMng::GetInstance().GetID("’e", "image/shot.png", Vector2(2, 1), Vector2(3, 6));
+	ImageMng::GetInstance().GetID("’e", "image/shot.png", Vector2(2, 1), Vector2(3, 8));
 	ImageMng::GetInstance().GetID("·¬×", "image/char.png", Vector2(10, 10), Vector2(30, 32));
 	ImageMng::GetInstance().GetID("“G”š”­", "image/en_blast.png", Vector2(5, 1), Vector2(64, 64));
 	ImageMng::GetInstance().GetID("Ž©‹@”š”­", "image/pl_blast.png", Vector2(4, 1), Vector2(64, 64));

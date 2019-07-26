@@ -59,7 +59,7 @@ private:
 	E_TYPE _eType;
 	E_AIM _aim;
 	int _aimCnt = 0;
-	float _angle;
+	float _rad;
 	Vector2_D _speed = { 4,4 };
 	double Add;
 	double AddAngle;

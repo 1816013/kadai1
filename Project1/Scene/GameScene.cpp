@@ -80,7 +80,7 @@ unique_Base GameScene::Update(unique_Base own)
 	
 
 	Vector2_D pPos;
-	for (auto& itr : _objList)		// 範囲for文shared_ptrを使うとできるunique_ptrでもauto&を使えばできる
+ 	for (auto& itr : _objList)		// 範囲for文shared_ptrを使うとできるunique_ptrでもauto&を使えばできる
 	{
 		itr->Update();
 		if (itr->GetUnitType() == UNIT::PLAYER)
@@ -94,9 +94,18 @@ unique_Base GameScene::Update(unique_Base own)
 					[](shared_Obj& obj) { return (*obj).isDeath(); }), 
 				   _objList.end());
 
+	size_t s_count = std::count_if(_objList.begin(), _objList.end(),
+		[](shared_Obj& obj)->bool {return ((*obj).GetUnitType() == UNIT::SHOT); }
+	);
+
+
+	pPos.y -= 16;
 	if (CheckHitKey(KEY_INPUT_SPACE))
 	{
-		_objList.emplace_back(new Shot(pPos, Vector2(3, 6)));
+		if (s_count < 2)
+		{
+			_objList.emplace_back(new Shot(pPos, Vector2(3, 8), UNIT::PLAYER));
+		}
 	}
 	Draw();
 

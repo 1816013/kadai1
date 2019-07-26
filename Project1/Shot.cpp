@@ -12,6 +12,7 @@ Shot::Shot(Vector2_D pos,Vector2 size, UNIT type)
 {
 	_pos = pos;
 	_size = size;
+	_uType = type;
 	init();
 }
 
@@ -22,7 +23,7 @@ Shot::~Shot()
 void Shot::Update(void)
 {
 	_dbgDrawBox(_pos.x - _size.x, _pos.y - _size.y , _pos.x + _size.x , _pos.y + _size.y , 0xffffff, true);
-	_pos.y -= 3;
+	_pos.y -= 7;
 	if (_pos.y < 0)
 	{
 		_death = true;
@@ -41,14 +42,14 @@ void Shot::Draw(void)
 
 bool Shot::init(void)
 {
-	if (GetUnitType() == UNIT::PLAYER)
+	if (_uType == UNIT::PLAYER)
 	{
 		AnimVector data;
 		data.reserve(1);
 		data.emplace_back(IMAGE_ID("’e")[1], 10);
 		SetAnim(ANIM::NOMAL, data);
 	}
-	if (GetUnitType() == UNIT::ENEMY)
+	if (_uType == UNIT::ENEMY)
 	{
 		AnimVector data;
 		data.reserve(1);

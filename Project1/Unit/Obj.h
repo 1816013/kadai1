@@ -59,6 +59,7 @@ protected:
 	Vector2 _size;						// ·¬×‚Ì»²½Ş
 	bool _alive;						// ¶‚«‚Ä‚¢‚é‚©
 	bool _death;
+	float _angle;
 
 };
 

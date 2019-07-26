@@ -30,6 +30,7 @@ Enemy::Enemy(const ENEMY_T& state)
 	Aim = {(double) 100, (double)lpSceneMng.gameScreenSize.y / 2 - 16 };
 	Add = -10;
 	_angle = 0;
+	_rad = 0;
 	AddAngle = 0;
 	init();
 	TRACE("enemy‚Ì¶¬\n");
@@ -59,6 +60,7 @@ void Enemy::Update(void)
 	}*/
  	SetMoveProc();
 	(this->*move)();
+	
 }
 
 UNIT Enemy::GetUnitType(void)
@@ -120,6 +122,10 @@ void Enemy::M_Sigmoid(void)
 		_aimCnt++;
 		
 	}
+	Vector2_D move;
+	move.x = (Add + 0.2 + 10) / 20 * range.x + _startP.x;
+	move.y = sigmoid(range.y, Add + 0.2) + _startP.y;
+	_angle = atan2(move.y - _pos.y, move.x - _pos.x) + 90 * DX_PI / 180;
 	//TRACE( "%f  %f\n", Add, sigmoid(range.y, Add)) + _startP.y;
 	//move = &Enemy::SetMoveProc;
 }
@@ -127,7 +133,7 @@ void Enemy::M_Sigmoid(void)
 void Enemy::M_Aiming(void)
 {
 
-	_angle = atan2(_aim[_aimCnt].first.y - _pos.y, _aim[_aimCnt].first.x - _pos.x);
+	_rad = atan2(_aim[_aimCnt].first.y - _pos.y, _aim[_aimCnt].first.x - _pos.x);
 	if (abs((int)_aim[_aimCnt].first.x - _pos.x) < _speed.x)
 	{
 		_speed.x = abs((int)_aim[_aimCnt].first.x - _pos.x);
@@ -137,30 +143,48 @@ void Enemy::M_Aiming(void)
 		_speed.y = abs((int)_aim[_aimCnt].first.y - _pos.y);
 	}
 
-	_pos.x += cos(_angle) * _speed.x;
-	_pos.y += sin(_angle) * _speed.y;
+	_pos.x += cos(_rad) * _speed.x;
+	_pos.y += sin(_rad) * _speed.y;
+	if (_aim[_aimCnt].first  / 100.0 == _pos / 100.0)
+	{
+		_angle = 0;
+	}
+	else
+	{
+		_angle = _rad + 90 * DX_PI / 180;
+	}
 	
 }
 
 void Enemy::M_Swirl(void)
 {
-	_angle += (4.5 + AddAngle) * DX_PI / 180;
-	AddAngle += 0.05;
+	_rad += (4.5 + AddAngle) * DX_PI / 180;
+	AddAngle += 5 * DX_PI / 180;
+	_pos.y -= sin(_rad) * _speed.y * 2;
+	
+	Vector2_D move = _pos;
 	if (_startP.x < lpSceneMng.gameScreenSize.x / 2)
 	{
-		_pos.x += cos(_angle) * -_speed.x * 2;
-		_pos.y -= sin(_angle) * _speed.y * 2;
+		move.x += cos(_rad) * -_speed.x * 2;
+		_pos = move;
+		move.x += cos(_rad + (4.5 + AddAngle) * DX_PI / 180) * -_speed.x * 2;
 	}
 	else
 	{
-		_pos.x += cos(_angle) * _speed.x * 2;
-		_pos.y -= sin(_angle) * _speed.y * 2;
-		
+		move.x += cos(_rad) * _speed.x * 2;	
+		_pos = move;
+		move.x += cos(_rad + (4.5 + AddAngle) * DX_PI / 180) * _speed.x * 2;
+
 	}
-	if (_angle > abs(540 * DX_PI / 180 ))
+	if (_rad > abs(540 * DX_PI / 180 ))
 	{
 		_aimCnt++;
 	}
+	
+	//move.x += cos(_rad + (4.5 + AddAngle) * DX_PI / 180) * -_speed.x * 2;
+	move.y -= sin(_rad + (4.5 + AddAngle) * DX_PI / 180) * _speed.y * 2;
+	_angle = atan2(move.y - _pos.y, move.x - _pos.x) + 90 * DX_PI / 180;
+	//_angle = _rad + 90 * DX_PI / 180;
 }
 
 void Enemy::M_Wait(void)

@@ -11,6 +11,6 @@ public:
 	void Draw(void);
 	bool init(void);
 private:
-	UNIT uType;
+	UNIT _uType;
 
 };
