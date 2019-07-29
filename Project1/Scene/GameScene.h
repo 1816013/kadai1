@@ -17,7 +17,7 @@ public:
 	unique_Base Update(unique_Base own) override;	// äe±ØÃﬂ√ﬁ∞ƒÇÇ‹Ç∆ÇﬂÇÈ
 	void Draw(void);			// πﬁ∞—Ω∏ÿ∞›Ç≈ÇÃï`âÊ
 	SCN_ID GetSceneID(void);	// ç°Ç«Ç±ÇÃº∞›
-	void EnemyInstance(ENEMY_T state, int no);
+	void EnemyInstance(ENEMY_T state);
 private:
 	std::vector<shared_Obj> _objList;	// ∑¨◊äiî[óp
 	int _ghGameScreen;			// πﬁ∞—ópΩ∏ÿ∞›
@@ -27,6 +27,9 @@ private:
 	Vector2_D aim[21];
 	Vector2_D sigAim[2];
 	Vector2_D sigAim2[2];
+	std::vector<Vector2_D> _bossAim;
+	std::vector<Vector2_D> _goeiAim;
+	std::vector<Vector2_D> _zakoAim;
 	bool _newKey;
 	bool _lastKey;
 };

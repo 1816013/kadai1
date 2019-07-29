@@ -7,7 +7,7 @@
 #include <Unit/Enemy.h>
 #include "Shot.h"
 #include "_DebugConOut.h"
-
+#include "_DebugDispOut.h"
 
 //#include <Input/InputState.h>
 //#include <Input/KeyState.h>
@@ -33,8 +33,8 @@ unique_Base GameScene::Update(unique_Base own)
 		{ (double)lpSceneMng.gameScreenSize.x + 16,(double)lpSceneMng.gameScreenSize.y / 2 - 16},
 		{ (double)lpSceneMng.gameScreenSize.x + 16, (double)lpSceneMng.gameScreenSize.y - 48}
 	};
-	Vector2_D aim[21];
-	for (int y = 0; y < 3; y++)
+	Vector2_D aim[42];
+	for (int y = 0; y < 6; y++)
 	{
 		for (int x = 0; x < 7; x++)
 		{
@@ -53,10 +53,42 @@ unique_Base GameScene::Update(unique_Base own)
 	_newKey = CheckHitKey(KEY_INPUT_R);
 	if (_newKey && !_lastKey)
 	{
+		
 		int no = rand() % 6;
 		for (int i = 0; i < 3; i++)
 		{
-			
+			// ‚±‚±‚©‚çŠÖ”—\’è
+			E_TYPE randType = static_cast<E_TYPE>(rand() % static_cast<int>(E_TYPE::MAX));
+			if (randType == E_TYPE::BOSS)
+			{
+				if (_bossAim.size() < 4)
+				{
+					_bossAim.emplace_back(Vector2_D(32 * _bossAim.size() + lpSceneMng.gameScreenSize.x / 2 - 48, 32));
+				}
+				else
+				{
+					randType = E_TYPE::GOEI;
+				}
+			}
+			if (randType == E_TYPE::GOEI)
+			{
+				if (_goeiAim.size() < 16)
+				{
+					_goeiAim.emplace_back(Vector2_D(32 * (int)(_goeiAim.size() % 8) + lpSceneMng.gameScreenSize.x / 2 - 112, 64 + 32 * (int)(_goeiAim.size() / 8)));
+				}
+				else
+				{
+					randType = E_TYPE::ZAKO;
+				}
+			}
+			if (randType == E_TYPE::ZAKO)
+			{
+				if (_zakoAim.size() < 20)
+				{
+					_zakoAim.emplace_back(Vector2_D(32 * (int)(_zakoAim.size() % 10) + lpSceneMng.gameScreenSize.x / 2 - 144, 128 + 32 * (int)(_zakoAim.size() / 10)));
+				}
+			}
+			// ‚±‚±‚Ü‚ÅŠÖ”—\’è
 			if (no < 3)
 			{
 				eMoveCon.emplace_back(sigAim[0], E_MOVE_TYPE::WAIT);
@@ -72,9 +104,21 @@ unique_Base GameScene::Update(unique_Base own)
 				eMoveCon.emplace_back(sigAim2[1], E_MOVE_TYPE::SWIRL);
 			}
 
-			eMoveCon.emplace_back(aim[_cnt % 21], E_MOVE_TYPE::AIMING);
+			_dbgDrawFormatString(0, 15, 0xffffff, "randType%d", randType);
+			if (randType == E_TYPE::BOSS)
+			{
+				eMoveCon.emplace_back(_bossAim[_bossAim.size() - 1], E_MOVE_TYPE::AIMING);
+			}
+			if (randType == E_TYPE::GOEI)
+			{
+				eMoveCon.emplace_back(_goeiAim[_goeiAim.size() - 1], E_MOVE_TYPE::AIMING);
+			}
+			if (randType == E_TYPE::ZAKO)
+			{
+				eMoveCon.emplace_back(_zakoAim[_zakoAim.size() - 1], E_MOVE_TYPE::AIMING);
+			}
 
-			EnemyInstance({ _pos[no], Vector2(30, 32),static_cast<E_TYPE>(rand() % static_cast<int>(E_TYPE::MAX)), move(eMoveCon), i * 15 }, no);
+			EnemyInstance({ _pos[no], Vector2(30, 32),randType, move(eMoveCon), i * 15 });
 		}
 	}
 	
@@ -97,12 +141,15 @@ unique_Base GameScene::Update(unique_Base own)
 	size_t s_count = std::count_if(_objList.begin(), _objList.end(),
 		[](shared_Obj& obj)->bool {return ((*obj).GetUnitType() == UNIT::SHOT); }
 	);
+	size_t p_count = std::count_if(_objList.begin(), _objList.end(),
+		[](shared_Obj& obj)->bool {return ((*obj).GetUnitType() == UNIT::PLAYER); }
+	);
 
 
 	pPos.y -= 16;
 	if (CheckHitKey(KEY_INPUT_SPACE))
 	{
-		if (s_count < 2)
+		if (s_count < 2 * p_count)
 		{
 			_objList.emplace_back(new Shot(pPos, Vector2(3, 8), UNIT::PLAYER));
 		}
@@ -117,7 +164,7 @@ SCN_ID GameScene::GetSceneID(void)
 	return SCN_ID::GAME;
 }
 
-void GameScene::EnemyInstance(ENEMY_T state, int no)
+void GameScene::EnemyInstance(ENEMY_T state)
 {
 	_objList.emplace_back(new Enemy(state));	// 0”Ô–Ú
 	_cnt++;

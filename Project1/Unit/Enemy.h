@@ -15,9 +15,9 @@ enum class E_STATE
 
 enum class E_TYPE
 {
-	A,
-	B,
-	C,
+	ZAKO,
+	GOEI,
+	BOSS,	
 	MAX
 };
 
