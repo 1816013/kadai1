@@ -32,5 +32,7 @@ private:
 	std::vector<Vector2_D> _zakoAim;
 	bool _newKey;
 	bool _lastKey;
+	bool _newKey2;
+	bool _lastKey2;
 };
 

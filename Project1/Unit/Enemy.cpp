@@ -32,6 +32,8 @@ Enemy::Enemy(const ENEMY_T& state)
 	_angle = 0;
 	_rad = 0;
 	AddAngle = 0;
+	_life = 1;
+	_movement = { 0, 0 };
 	init();
 	TRACE("enemy‚Ì¶¬\n");
 }
@@ -49,15 +51,15 @@ void Enemy::Draw(void)
 void Enemy::Update(void)
 {
 	_dbgDrawCircle(_pos.x, _pos.y, _size.x / 2, 0xff0000, true);
-	/*if (DestroyProc())
+	if (DestroyProc())
 	{
 		return;
 	}
-	if (rand() % 300 == 0)
+	if (_life == 0)
 	{
 		_alive = false;
 		animKey(ANIM::DEATH);
-	}*/
+	}
  	SetMoveProc();
 	(this->*move)();
 	
@@ -71,6 +73,24 @@ UNIT Enemy::GetUnitType(void)
 void Enemy::EnemyAnim(void)
 {
 	_animCnt = lpSceneMng.Frame() % 60;
+}
+
+void Enemy::HitCheck(std::vector<shared_Obj> list)
+{
+	for (auto itr : list) {
+		auto pos = itr->pos();
+		Vector2 size = { 3, 6 };
+		if (itr->GetUnitType() == UNIT::SHOT )
+		{
+			if (!((*this)._pos.x + (*this)._size.x / 2 < pos.x - size.x / 2
+				|| (*this)._pos.x - (*this)._size.x / 2 > pos.x + size.x / 2
+				|| (*this)._pos.y - (*this)._size.y / 2 > pos.y + size.y / 2
+				|| (*this)._pos.y + (*this)._size.y / 2 < pos.y - size.y / 2))
+			{
+				_life--;
+			}
+		}
+	}
 }
 
 void Enemy::SetMoveProc(void)
@@ -91,6 +111,10 @@ void Enemy::SetMoveProc(void)
 	{
 		move = &Enemy::M_Aiming;
 	}
+	if (_aim[_aimCnt].second == E_MOVE_TYPE::LETERAL)
+	{
+		move = &Enemy::M_Leteral;
+	}
 	/*if (_moveCnt < 36000)
 	{
 		
@@ -105,7 +129,7 @@ void Enemy::M_Sigmoid(void)
 {
 	Vector2_D range;
 	auto sigmoid = [](double ran, double x) { return ran / (1.0 + exp(-1.0 * x )); };
-	Add += 0.2; 
+	Add += 0.4; 
 	range = { _aim[_aimCnt].first.x - _startP.x , _aim[_aimCnt].first.y - _startP.y  };
 	if (Add <= 10.0)
 	{
@@ -133,7 +157,7 @@ void Enemy::M_Sigmoid(void)
 void Enemy::M_Aiming(void)
 {
 
-	_rad = atan2(_aim[_aimCnt].first.y - _pos.y, _aim[_aimCnt].first.x - _pos.x);
+	_rad = atan2(_aim[_aimCnt].first.y  - _pos.y, _aim[_aimCnt].first.x  - _pos.x);
 	if (abs((int)_aim[_aimCnt].first.x - _pos.x) < _speed.x)
 	{
 		_speed.x = abs((int)_aim[_aimCnt].first.x - _pos.x);
@@ -145,9 +169,10 @@ void Enemy::M_Aiming(void)
 
 	_pos.x += cos(_rad) * _speed.x;
 	_pos.y += sin(_rad) * _speed.y;
-	if (_aim[_aimCnt].first  / 100.0 == _pos / 100.0)
+	if (_aim[_aimCnt].first == _pos)
 	{
 		_angle = 0;
+		_aimCnt++;
 	}
 	else
 	{
@@ -165,14 +190,14 @@ void Enemy::M_Swirl(void)
 	Vector2_D move = _pos;
 	if (_startP.x < lpSceneMng.gameScreenSize.x / 2)
 	{
-		move.x += cos(_rad) * -_speed.x * 2;
-		_pos = move;
+		_pos.x += cos(_rad) * -_speed.x * 2;
+		
 		move.x += cos(_rad + (4.5 + AddAngle) * DX_PI / 180) * -_speed.x * 2;
 	}
 	else
 	{
-		move.x += cos(_rad) * _speed.x * 2;	
-		_pos = move;
+		_pos.x += cos(_rad) * _speed.x * 2;
+		move = _pos;
 		move.x += cos(_rad + (4.5 + AddAngle) * DX_PI / 180) * _speed.x * 2;
 
 	}
@@ -194,6 +219,26 @@ void Enemy::M_Wait(void)
 		_aimCnt++;
 	}
 	WaitCnt++;
+}
+
+void Enemy::M_Leteral(void)
+{
+	if (lpSceneMng.Frame() % 20 == 0)
+	{
+		_pos.x += _movement.x;
+		if (_pos.x > 30 && _movement.x >= 0)
+		{
+			_movement.x = -5;
+		}
+		if (_pos.x < lpSceneMng.gameScreenSize.x - 30 && _movement.x <= 0)
+		{
+			_movement.x = 5;
+		}
+	}
+}
+
+void Enemy::M_Shoot(void)
+{
 }
 
 

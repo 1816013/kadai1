@@ -53,9 +53,8 @@ unique_Base GameScene::Update(unique_Base own)
 	_newKey = CheckHitKey(KEY_INPUT_R);
 	if (_newKey && !_lastKey)
 	{
-		
 		int no = rand() % 6;
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 6; i++)
 		{
 			// ‚±‚±‚©‚çŠÖ”—\’è
 			E_TYPE randType = static_cast<E_TYPE>(rand() % static_cast<int>(E_TYPE::MAX));
@@ -117,8 +116,9 @@ unique_Base GameScene::Update(unique_Base own)
 			{
 				eMoveCon.emplace_back(_zakoAim[_zakoAim.size() - 1], E_MOVE_TYPE::AIMING);
 			}
+			eMoveCon.emplace_back(Vector2_D( lpSceneMng.gameScreenSize.x - 16 , 0 ), E_MOVE_TYPE::LETERAL);
 
-			EnemyInstance({ _pos[no], Vector2(30, 32),randType, move(eMoveCon), i * 15 });
+			EnemyInstance({ _pos[no], Vector2(30, 32),randType, move(eMoveCon), i * 8 });
 		}
 	}
 	
@@ -127,6 +127,7 @@ unique_Base GameScene::Update(unique_Base own)
  	for (auto& itr : _objList)		// ”ÍˆÍfor•¶shared_ptr‚ðŽg‚¤‚Æ‚Å‚«‚éunique_ptr‚Å‚àauto&‚ðŽg‚¦‚Î‚Å‚«‚é
 	{
 		itr->Update();
+		itr->HitCheck(_objList);
 		if (itr->GetUnitType() == UNIT::PLAYER)
 		{
 			pPos = itr->pos();
@@ -147,7 +148,9 @@ unique_Base GameScene::Update(unique_Base own)
 
 
 	pPos.y -= 16;
-	if (CheckHitKey(KEY_INPUT_SPACE))
+	_lastKey2 = _newKey2;
+	_newKey2 = CheckHitKey(KEY_INPUT_SPACE);
+	if (_newKey2 && !_lastKey2)
 	{
 		if (s_count < 2 * p_count)
 		{

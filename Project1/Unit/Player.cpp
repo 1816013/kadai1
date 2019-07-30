@@ -75,6 +75,9 @@ UNIT Player::GetUnitType(void)
 {
 	return UNIT::PLAYER;
 }
+void Player::HitCheck(std::vector<shared_Obj> list)
+{
+}
 bool Player::init(void)
 {
 	AnimVector data;

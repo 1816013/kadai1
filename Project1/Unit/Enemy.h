@@ -27,6 +27,7 @@ enum class E_MOVE_TYPE
 	SIGMOID,
 	SWIRL,
 	AIMING,
+	LETERAL,
 	MAX
 };
 
@@ -40,13 +41,14 @@ class Enemy :
 {
 public:
 	Enemy();								// ｺﾝｽﾄﾗｸﾀ
-	Enemy(const ENEMY_T& state);					// 引数付きｺﾝｽﾄﾗｸﾀ
+	Enemy(const ENEMY_T& state);			// 引数付きｺﾝｽﾄﾗｸﾀ
 	~Enemy();								// ﾃﾞｽﾄﾗｸﾀ
 
 	void Draw(void) override;				// ｴﾈﾐｰの描画
 	void Update(void);						// ｴﾈﾐｰの移動関数にしたい
 	UNIT GetUnitType(void) override;		// お前はｴﾈﾐｰか？
-	void EnemyAnim(void);
+	void EnemyAnim(void);					// ｴﾈﾐｰのｱﾆﾒｰｼｮﾝをそろえる
+	void HitCheck(std::vector<shared_Obj> list) override;	// 当たり判定
 
 	void(Enemy::*move)(void);				// 関数ﾎﾟｲﾝﾀ
 	void SetMoveProc(void);
@@ -54,6 +56,8 @@ public:
 	void M_Aiming(void);
 	void M_Swirl(void);
 	void M_Wait(void);
+	void M_Leteral(void);
+	void M_Shoot(void);
 private:
 	bool init(void) override;
 	E_TYPE _eType;
@@ -67,6 +71,9 @@ private:
 	Vector2_D Aim;
 	int WaitCnt = 0;
 	int WaitTime;
+
+	Vector2_D _movement;
+
 
 	// ﾄﾘｶﾞｰｷｰ用
 	bool _newKey;

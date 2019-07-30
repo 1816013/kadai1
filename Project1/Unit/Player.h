@@ -13,6 +13,7 @@ public:
 	void Update(void);					// ÌßÚ²Ô°‚ÌˆÚ“®ˆ—ŠÖ”
 	void Draw(void) override;			// ÌßÚ²Ô°•`‰æ
 	UNIT GetUnitType(void) override;	// ‚¨‘O‚ÍÌßÚ²Ô°‚©H
+	void HitCheck(std::vector<shared_Obj> list)override;	// “–‚½‚è”»’è
 	
 private:
 	bool init(void) override;			// •`‰æÃŞ°À‚Ì‰Šú‰»‚È‚Ç

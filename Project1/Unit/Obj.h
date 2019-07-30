@@ -39,12 +39,14 @@ public:
 	virtual void Update(void) = 0;		// ｵﾌﾞｼﾞｪｸﾄの操作行動
 	virtual UNIT GetUnitType(void) = 0;	// ｷｬﾗの種類の取得
 	virtual bool init(void) = 0;		// ｱﾆﾒｰｼｮﾝの初期化初期設定
+	virtual void HitCheck(std::vector<shared_Obj> list) = 0; // 当たり判定
 	const ANIM animKey(void) const;		// _animKeyの取得
 	bool animKey(const ANIM key);		// _animKeyの設定
 	const Vector2_D pos(void) const;		// ｵﾌﾞｼﾞｪｸﾄの座標取得
 	bool isAlive(void) { return _alive; };	// 叙述関数(ﾌﾟﾚﾃﾞｨｹｰﾄ)
 	void setAlive(bool alive);				// 生きているか取得
 	bool isDeath(void) { return _death; };	// 叙述関数(ﾌﾟﾚﾃﾞｨｹｰﾄ)
+	
 private:
 	std::map<ANIM, AnimVector> _animMap;
 	ANIM _animKey;						// ｱﾆﾒｰｼｮﾝの名前
@@ -60,5 +62,6 @@ protected:
 	bool _alive;						// 生きているか
 	bool _death;
 	float _angle;
+	int _life;
 };
 
