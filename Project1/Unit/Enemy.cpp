@@ -106,7 +106,7 @@ void Enemy::M_Sigmoid(void)
 	Vector2_D range;
 	auto sigmoid = [](double ran, double x) { return ran / (1.0 + exp(-1.0 * x )); };
 	Add += 0.2; 
-	range = { _aim[_aimCnt].first.x -  _startP.x , _aim[_aimCnt].first.y - _startP.y  };
+	range = { _aim[_aimCnt].first.x - _startP.x , _aim[_aimCnt].first.y - _startP.y  };
 	if (Add <= 10.0)
 	{
 		//	x³‹K‰»(Add + 10) / 20@=  (0.0 ` 1.0 ` ‡)
