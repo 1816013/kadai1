@@ -7,6 +7,7 @@
 #include <Unit/Enemy.h>
 #include <Input/InputState.h>
 
+using vecVec2_D = std::vector<Vector2_D>;
 
 class GameScene :
 	public BaseScene
@@ -27,12 +28,14 @@ private:
 	Vector2_D aim[21];
 	Vector2_D sigAim[2];
 	Vector2_D sigAim2[2];
-	std::vector<Vector2_D> _bossAim;
-	std::vector<Vector2_D> _goeiAim;
-	std::vector<Vector2_D> _zakoAim;
+	vecVec2_D _bossAim;
+	vecVec2_D _goeiAim;
+	vecVec2_D _zakoAim;
+	std::vector<vecVec2_D> _enAim;
 	bool _newKey;
 	bool _lastKey;
 	bool _newKey2;
 	bool _lastKey2;
+	int _arrivalCnt;
 };
 

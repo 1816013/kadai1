@@ -80,9 +80,9 @@ const Vector2_D Obj::pos(void) const
 	return _pos;
 }
 
-void Obj::setAlive(bool alive)
+const Vector2 Obj::size(void) const
 {
-	_alive = alive;
+	return _size;
 }
 
 bool Obj::SetAnim(const ANIM key, AnimVector& data)

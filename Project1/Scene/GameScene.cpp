@@ -16,6 +16,7 @@ GameScene::GameScene()
 {
 	Init();
 	_cnt = 0;
+	_arrivalCnt = 0;
 }
 
 GameScene::~GameScene()
@@ -33,14 +34,14 @@ unique_Base GameScene::Update(unique_Base own)
 		{ (double)lpSceneMng.gameScreenSize.x + 16,(double)lpSceneMng.gameScreenSize.y / 2 - 16},
 		{ (double)lpSceneMng.gameScreenSize.x + 16, (double)lpSceneMng.gameScreenSize.y - 48}
 	};
-	Vector2_D aim[42];
+	/*Vector2_D aim[42];
 	for (int y = 0; y < 6; y++)
 	{
 		for (int x = 0; x < 7; x++)
 		{
 			aim[y * 7 + x] = {(double) 32 + (x * 32), (double)32 + (y * 32) };
 		}
-	}
+	}*/
 
 	Vector2_D sigAim[2];
 	Vector2_D sigAim2[2];
@@ -49,20 +50,38 @@ unique_Base GameScene::Update(unique_Base own)
 	sigAim2[1] = { (double)100, (double)lpSceneMng.gameScreenSize.y - 48 };
 	sigAim2[0] = { (double)400, (double)lpSceneMng.gameScreenSize.y - 48 };
 
+
+	size_t a = _bossAim.size() + _goeiAim.size() + _zakoAim.size();
 	_lastKey = _newKey;
 	_newKey = CheckHitKey(KEY_INPUT_R);
-	if (_newKey && !_lastKey)
+	if (_newKey && !_lastKey || _arrivalCnt % 120 == 0 && a < 40)
 	{
 		int no = rand() % 6;
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < 5; i++)
 		{
-			// ‚±‚±‚©‚çŠÖ”—\’è
 			E_TYPE randType = static_cast<E_TYPE>(rand() % static_cast<int>(E_TYPE::MAX));
+
+			if (no < 3)
+			{
+				eMoveCon.emplace_back(_pos[no], E_MOVE_TYPE::WAIT);
+				eMoveCon.emplace_back(sigAim[0], E_MOVE_TYPE::SIGMOID);
+				eMoveCon.emplace_back(sigAim2[0], E_MOVE_TYPE::SIGMOID);
+				eMoveCon.emplace_back(sigAim2[0], E_MOVE_TYPE::SWIRL);
+			}
+			else
+			{
+				eMoveCon.emplace_back(_pos[no], E_MOVE_TYPE::WAIT);
+				eMoveCon.emplace_back(sigAim[1], E_MOVE_TYPE::SIGMOID);
+				eMoveCon.emplace_back(sigAim2[1], E_MOVE_TYPE::SIGMOID);
+				eMoveCon.emplace_back(sigAim2[1], E_MOVE_TYPE::SWIRL);
+			}
+			
 			if (randType == E_TYPE::BOSS)
 			{
 				if (_bossAim.size() < 4)
 				{
 					_bossAim.emplace_back(Vector2_D(32 * _bossAim.size() + lpSceneMng.gameScreenSize.x / 2 - 48, 32));
+					eMoveCon.emplace_back(_bossAim[_bossAim.size() - 1], E_MOVE_TYPE::AIMING);
 				}
 				else
 				{
@@ -74,6 +93,7 @@ unique_Base GameScene::Update(unique_Base own)
 				if (_goeiAim.size() < 16)
 				{
 					_goeiAim.emplace_back(Vector2_D(32 * (int)(_goeiAim.size() % 8) + lpSceneMng.gameScreenSize.x / 2 - 112, 64 + 32 * (int)(_goeiAim.size() / 8)));
+					eMoveCon.emplace_back(_goeiAim[_goeiAim.size() - 1], E_MOVE_TYPE::AIMING);
 				}
 				else
 				{
@@ -85,49 +105,27 @@ unique_Base GameScene::Update(unique_Base own)
 				if (_zakoAim.size() < 20)
 				{
 					_zakoAim.emplace_back(Vector2_D(32 * (int)(_zakoAim.size() % 10) + lpSceneMng.gameScreenSize.x / 2 - 144, 128 + 32 * (int)(_zakoAim.size() / 10)));
+					eMoveCon.emplace_back(_zakoAim[_zakoAim.size() - 1], E_MOVE_TYPE::AIMING);
 				}
 			}
-			// ‚±‚±‚Ü‚ÅŠÖ”—\’è
-			if (no < 3)
-			{
-				eMoveCon.emplace_back(sigAim[0], E_MOVE_TYPE::WAIT);
-				eMoveCon.emplace_back(sigAim[0], E_MOVE_TYPE::SIGMOID);
-				eMoveCon.emplace_back(sigAim2[0], E_MOVE_TYPE::SIGMOID);
-				eMoveCon.emplace_back(sigAim2[0], E_MOVE_TYPE::SWIRL);
-			}
-			else
-			{
-				eMoveCon.emplace_back(sigAim[0], E_MOVE_TYPE::WAIT);
-				eMoveCon.emplace_back(sigAim[1], E_MOVE_TYPE::SIGMOID);
-				eMoveCon.emplace_back(sigAim2[1], E_MOVE_TYPE::SIGMOID);
-				eMoveCon.emplace_back(sigAim2[1], E_MOVE_TYPE::SWIRL);
-			}
 
-			_dbgDrawFormatString(0, 15, 0xffffff, "randType%d", randType);
-			if (randType == E_TYPE::BOSS)
-			{
-				eMoveCon.emplace_back(_bossAim[_bossAim.size() - 1], E_MOVE_TYPE::AIMING);
-			}
-			if (randType == E_TYPE::GOEI)
-			{
-				eMoveCon.emplace_back(_goeiAim[_goeiAim.size() - 1], E_MOVE_TYPE::AIMING);
-			}
-			if (randType == E_TYPE::ZAKO)
-			{
-				eMoveCon.emplace_back(_zakoAim[_zakoAim.size() - 1], E_MOVE_TYPE::AIMING);
-			}
 			eMoveCon.emplace_back(Vector2_D( lpSceneMng.gameScreenSize.x - 16 , 0 ), E_MOVE_TYPE::LETERAL);
 
 			EnemyInstance({ _pos[no], Vector2(30, 32),randType, move(eMoveCon), i * 8 });
 		}
 	}
+
+	_arrivalCnt++;
 	
 
 	Vector2_D pPos;
- 	for (auto& itr : _objList)		// ”ÍˆÍfor•¶shared_ptr‚ðŽg‚¤‚Æ‚Å‚«‚éunique_ptr‚Å‚àauto&‚ðŽg‚¦‚Î‚Å‚«‚é
+	for (auto& itr : _objList)		// ”ÍˆÍfor•¶shared_ptr‚ðŽg‚¤‚Æ‚Å‚«‚éunique_ptr‚Å‚àauto&‚ðŽg‚¦‚Î‚Å‚«‚é
+	{
+		itr->HitCheck(_objList);
+	}
+ 	for (auto& itr : _objList)
 	{
 		itr->Update();
-		itr->HitCheck(_objList);
 		if (itr->GetUnitType() == UNIT::PLAYER)
 		{
 			pPos = itr->pos();
@@ -157,6 +155,13 @@ unique_Base GameScene::Update(unique_Base own)
 			_objList.emplace_back(new Shot(pPos, Vector2(3, 8), UNIT::PLAYER));
 		}
 	}
+	/*if (isShot())
+	{
+		if (s_count < 2 * p_count)
+		{
+			_objList.emplace_back(new Shot(pPos, Vector2(3, 8), UNIT::PLAYER));
+		}
+	}*/
 	Draw();
 
 	return std::move(own);
@@ -183,7 +188,7 @@ void GameScene::EnemyInstance(ENEMY_T state)
 bool GameScene::Init(void)
 {
 	_ghGameScreen = MakeScreen(lpSceneMng.gameScreenSize.x, lpSceneMng.gameScreenSize.y, true);
-	_objList.emplace_back(new Player(Vector2_D(200, 300), Vector2(30, 32)));
+	_objList.emplace_back(new Player(Vector2_D(lpSceneMng.gameScreenSize.x / 2 - 16, lpSceneMng.gameScreenSize.y - 16), Vector2(30, 32)));
 	
 	srand(time(NULL));
 	return true;

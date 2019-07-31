@@ -48,7 +48,7 @@ public:
 	void Update(void);						// ´ÈĞ°‚ÌˆÚ“®ŠÖ”‚É‚µ‚½‚¢
 	UNIT GetUnitType(void) override;		// ‚¨‘O‚Í´ÈĞ°‚©H
 	void EnemyAnim(void);					// ´ÈĞ°‚Ì±ÆÒ°¼®İ‚ğ‚»‚ë‚¦‚é
-	void HitCheck(std::vector<shared_Obj> list) override;	// “–‚½‚è”»’è
+	bool HitCheck(std::vector<shared_Obj> list) override;	// “–‚½‚è”»’è
 
 	void(Enemy::*move)(void);				// ŠÖ”Îß²İÀ
 	void SetMoveProc(void);
@@ -58,13 +58,15 @@ public:
 	void M_Wait(void);
 	void M_Leteral(void);
 	void M_Shoot(void);
+
+	bool shot(void);
 private:
 	bool init(void) override;
 	E_TYPE _eType;
 	E_AIM _aim;
 	int _aimCnt = 0;
 	float _rad;
-	Vector2_D _speed = { 4,4 };
+	Vector2_D _speed = { 8,8 };
 	double Add;
 	double AddAngle;
 	Vector2_D _startP;

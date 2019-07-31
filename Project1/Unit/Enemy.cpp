@@ -10,7 +10,7 @@
 
 Enemy::Enemy()
 {
-	animKey(ANIM::NOMAL2);
+	animKey(ANIM::NOMAL);
 	init();
 	_alive = true;
 	_death = false;
@@ -32,9 +32,18 @@ Enemy::Enemy(const ENEMY_T& state)
 	_angle = 0;
 	_rad = 0;
 	AddAngle = 0;
-	_life = 1;
+	if (_eType == E_TYPE::BOSS)
+	{
+		_life = 2;
+	}
+	else
+	{
+		_life = 1;
+	}
 	_movement = { 0, 0 };
+	
 	init();
+	
 	TRACE("enemyÇÃê∂ê¨\n");
 }
 
@@ -55,11 +64,21 @@ void Enemy::Update(void)
 	{
 		return;
 	}
-	if (_life == 0)
+	if (_life <= 0)
 	{
 		_alive = false;
 		animKey(ANIM::DEATH);
 	}
+	if (_eType == E_TYPE::BOSS)
+	{
+		if (_life == 1 && animKey() == ANIM::NOMAL)
+		{
+			animKey(ANIM::EX);
+			EnemyAnim();
+		}
+	}
+
+	shot();
  	SetMoveProc();
 	(this->*move)();
 	
@@ -75,12 +94,12 @@ void Enemy::EnemyAnim(void)
 	_animCnt = lpSceneMng.Frame() % 60;
 }
 
-void Enemy::HitCheck(std::vector<shared_Obj> list)
+bool Enemy::HitCheck(std::vector<shared_Obj> list)
 {
 	for (auto itr : list) {
 		auto pos = itr->pos();
-		Vector2 size = { 3, 6 };
-		if (itr->GetUnitType() == UNIT::SHOT )
+		Vector2 size = itr->size();
+		if (itr->GetUnitType() == UNIT::SHOT && _alive && !itr->isDeath())
 		{
 			if (!((*this)._pos.x + (*this)._size.x / 2 < pos.x - size.x / 2
 				|| (*this)._pos.x - (*this)._size.x / 2 > pos.x + size.x / 2
@@ -88,9 +107,12 @@ void Enemy::HitCheck(std::vector<shared_Obj> list)
 				|| (*this)._pos.y + (*this)._size.y / 2 < pos.y - size.y / 2))
 			{
 				_life--;
+				TRACE("HPå∏è≠\n");
+				return true;
 			}
 		}
 	}
+	return false;
 }
 
 void Enemy::SetMoveProc(void)
@@ -185,20 +207,20 @@ void Enemy::M_Swirl(void)
 {
 	_rad += (4.5 + AddAngle) * DX_PI / 180;
 	AddAngle += 5 * DX_PI / 180;
-	_pos.y -= sin(_rad) * _speed.y * 2;
+	_pos.y -= sin(_rad) * _speed.y;
 	
 	Vector2_D move = _pos;
 	if (_startP.x < lpSceneMng.gameScreenSize.x / 2)
 	{
-		_pos.x += cos(_rad) * -_speed.x * 2;
+		_pos.x += cos(_rad) * -_speed.x;
 		
-		move.x += cos(_rad + (4.5 + AddAngle) * DX_PI / 180) * -_speed.x * 2;
+		move.x += cos(_rad + (4.5 + AddAngle) * DX_PI / 180) * -_speed.x;
 	}
 	else
 	{
-		_pos.x += cos(_rad) * _speed.x * 2;
+		_pos.x += cos(_rad) * _speed.x;
 		move = _pos;
-		move.x += cos(_rad + (4.5 + AddAngle) * DX_PI / 180) * _speed.x * 2;
+		move.x += cos(_rad + (4.5 + AddAngle) * DX_PI / 180) * _speed.x;
 
 	}
 	if (_rad > abs(540 * DX_PI / 180 ))
@@ -223,7 +245,7 @@ void Enemy::M_Wait(void)
 
 void Enemy::M_Leteral(void)
 {
-	if (lpSceneMng.Frame() % 20 == 0)
+	/*if (lpSceneMng.Frame() % 20 == 0)
 	{
 		_pos.x += _movement.x;
 		if (_pos.x > 30 && _movement.x >= 0)
@@ -234,11 +256,22 @@ void Enemy::M_Leteral(void)
 		{
 			_movement.x = 5;
 		}
-	}
+	}*/
 }
 
 void Enemy::M_Shoot(void)
 {
+
+
+}
+
+bool Enemy::shot(void)
+{
+	if (CheckHitKey(KEY_INPUT_I))
+	{
+		return _shotF = true;
+	}
+	return _shotF = false;
 }
 
 
@@ -251,6 +284,12 @@ bool Enemy::init(void)
 	data.emplace_back(IMAGE_ID("∑¨◊")[10 + 10 * static_cast<int>(_eType)], 30);
 	data.emplace_back(IMAGE_ID("∑¨◊")[11 + 10 * static_cast<int>(_eType)], 60);
 	SetAnim(ANIM::NOMAL, data);
+
+	data.reserve(2);
+	//data.push_back(std::make_pair(IMAGE_ID("player")[0], 30));
+	data.emplace_back(IMAGE_ID("∑¨◊")[14 + 10 * static_cast<int>(_eType)], 30);
+	data.emplace_back(IMAGE_ID("∑¨◊")[15 + 10 * static_cast<int>(_eType)], 60);
+	SetAnim(ANIM::EX, data);
 
 	/*data.emplace_back(IMAGE_ID("∑¨◊")[20], 30);
 	data.emplace_back(IMAGE_ID("∑¨◊")[21], 60);

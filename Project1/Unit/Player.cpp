@@ -75,8 +75,9 @@ UNIT Player::GetUnitType(void)
 {
 	return UNIT::PLAYER;
 }
-void Player::HitCheck(std::vector<shared_Obj> list)
+bool Player::HitCheck(std::vector<shared_Obj> list)
 {
+	return false;
 }
 bool Player::init(void)
 {

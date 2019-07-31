@@ -13,7 +13,7 @@ Shot::Shot(Vector2_D pos,Vector2 size, UNIT type)
 	_pos = pos;
 	_size = size;
 	_uType = type;
-	_life = 1;
+
 	init();
 }
 
@@ -25,10 +25,9 @@ void Shot::Update(void)
 {
 	_dbgDrawBox(_pos.x - _size.x, _pos.y - _size.y , _pos.x + _size.x , _pos.y + _size.y , 0xffffff, true);
 	_pos.y -= 7;
-	if (_pos.y < 0 || _life < 0)
+	if (_pos.y < 0)
 	{
 		_death = true;
-		TRACE("’e‚ðíœ\n");
 	}
 }
 
@@ -60,11 +59,11 @@ bool Shot::init(void)
 	return true;
 }
 
-void Shot::HitCheck(std::vector<shared_Obj> list)
+bool Shot::HitCheck(std::vector<shared_Obj> list)
 {
 	for (auto itr : list) {
 		auto pos = itr->pos();
-		Vector2 size = { 32, 30 };
+		Vector2 size = itr->size();
 		if (itr->GetUnitType() == UNIT::ENEMY && _uType == UNIT::PLAYER && itr->isAlive())
 		{
 			if (!((*this)._pos.x + (*this)._size.x / 2 < pos.x - size.x / 2
@@ -72,11 +71,13 @@ void Shot::HitCheck(std::vector<shared_Obj> list)
 				|| (*this)._pos.y - (*this)._size.y / 2 > pos.y + size.y / 2
 				|| (*this)._pos.y + (*this)._size.y / 2 < pos.y - size.y / 2))
 			{
-	 			_life--;
+ 				_death = true;
 				TRACE("’¼Œ‚’e\n");
+				return true;
 			}
 		}			
 	}
+	return false;
 }
 
 UNIT Shot::GetUType(void)
