@@ -27,7 +27,7 @@ enum class E_MOVE_TYPE
 	SIGMOID,
 	SWIRL,
 	AIMING,
-	LETERAL,
+	ZOOM,
 	MAX
 };
 
@@ -56,8 +56,8 @@ public:
 	void M_Aiming(void);
 	void M_Swirl(void);
 	void M_Wait(void);
-	void M_Leteral(void);
-	void M_Shoot(void);
+	void M_ZOOM(void);
+
 
 	bool shot(void);
 private:
@@ -73,6 +73,12 @@ private:
 	Vector2_D Aim;
 	int WaitCnt = 0;
 	int WaitTime;
+
+	Vector2_D storagePos;
+	double AddRange = 0.01f;
+	double nowRange = 1.0f;
+	double maxRange = 1.6f;
+	double minRange = 1.0f;
 
 	Vector2_D _movement;
 

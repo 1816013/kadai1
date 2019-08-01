@@ -131,9 +131,9 @@ void Enemy::SetMoveProc(void)
 	{
 		move = &Enemy::M_Aiming;
 	}
-	if (_aim[_aimCnt].second == E_MOVE_TYPE::LETERAL)
+	if (_aim[_aimCnt].second == E_MOVE_TYPE::ZOOM)
 	{
-		move = &Enemy::M_Leteral;
+		move = &Enemy::M_ZOOM;
 	}
 	/*if (_moveCnt < 36000)
 	{
@@ -192,11 +192,15 @@ void Enemy::M_Aiming(void)
 	if (_aim[_aimCnt].first == _pos)
 	{
 		_angle = 0;
-		_aimCnt++;
+		storagePos = _aim[_aimCnt].first;
 	}
 	else
 	{
 		_angle = _rad + 90 * DX_PI / 180;
+	}
+	if (CheckHitKey(KEY_INPUT_RETURN))
+	{
+		_aimCnt++;
 	}
 	
 }
@@ -243,25 +247,19 @@ void Enemy::M_Wait(void)
 	WaitCnt++;
 }
 
-void Enemy::M_Leteral(void)
+void Enemy::M_ZOOM(void)
 {
-	/*if (lpSceneMng.Frame() % 20 == 0)
+	Vector2_D range = _aim[_aimCnt].first - storagePos;
+	
+	range *= nowRange;
+	
+	_pos = range + _aim[_aimCnt].first;
+	_pos.y *= -1;
+	nowRange += AddRange;
+	if (nowRange < minRange || nowRange > maxRange)
 	{
-		_pos.x += _movement.x;
-		if (_pos.x > 30 && _movement.x >= 0)
-		{
-			_movement.x = -5;
-		}
-		if (_pos.x < lpSceneMng.gameScreenSize.x - 30 && _movement.x <= 0)
-		{
-			_movement.x = 5;
-		}
-	}*/
-}
-
-void Enemy::M_Shoot(void)
-{
-
+		AddRange *= -1;
+	}
 
 }
 

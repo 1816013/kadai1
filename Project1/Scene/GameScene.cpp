@@ -104,7 +104,7 @@ unique_Base GameScene::Update(unique_Base own)
 				}
 			}
 
-			eMoveCon.emplace_back(Vector2_D( lpSceneMng.gameScreenSize.x - 16 , 0 ), E_MOVE_TYPE::LETERAL);
+			eMoveCon.emplace_back(Vector2_D( lpSceneMng.gameScreenSize.x / 2 , 0), E_MOVE_TYPE::ZOOM);
 
 			EnemyInstance({ _pos[no], Vector2(30, 32),randType, move(eMoveCon), i * 8 });
 		}
