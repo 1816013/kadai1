@@ -1,6 +1,8 @@
 #include "shot.h"
+#include <DxLib.h>
 #include <common/ImageMng.h>
 #include <unit/Obj.h>
+#include <Scene/SceneMng.h>
 #include "_DebugConOut.h"
 #include "_DebugDispOut.h"
 
@@ -8,11 +10,11 @@ Shot::Shot()
 {
 }
 
-Shot::Shot(Vector2_D pos,Vector2 size, UNIT type)
+Shot::Shot(ShotPair state,Vector2 size)
 {
-	_pos = pos;
+	_pos = state.first;
 	_size = size;
-	_uType = type;
+	_uType = state.second;
 
 	init();
 }
@@ -24,8 +26,17 @@ Shot::~Shot()
 void Shot::Update(void)
 {
 	_dbgDrawBox(_pos.x - _size.x, _pos.y - _size.y , _pos.x + _size.x , _pos.y + _size.y , 0xffffff, true);
-	_pos.y -= 7;
-	if (_pos.y < 0)
+	if (_uType == UNIT::PLAYER)
+	{
+		_pos.y -= 7;
+		_angle = 0;
+	}
+	if (_uType == UNIT::ENEMY)
+	{
+		_pos.y += 7;
+		_angle = 180 * DX_PI / 180;
+	}
+	if (_pos.y < 0 || _pos.y > lpSceneMng.gameScreenSize.y)
 	{
 		_death = true;
 	}

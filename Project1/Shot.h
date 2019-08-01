@@ -1,11 +1,14 @@
 #pragma once
 #include <unit/Obj.h>
 
+
+using ShotPair = std::pair<Vector2_D, UNIT >;
+
 class Shot : public Obj
 {
 public:
 	Shot();
-	Shot(Vector2_D pos, Vector2 size, UNIT type);
+	Shot(ShotPair state, Vector2 size);
 	~Shot();
 	void Update(void) override;
 	UNIT GetUnitType(void) override;

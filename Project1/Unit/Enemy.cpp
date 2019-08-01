@@ -6,8 +6,6 @@
 #include "_DebugConOut.h"
 #include "_DebugDispOut.h"
 
-
-
 Enemy::Enemy()
 {
 	animKey(ANIM::NOMAL);
@@ -96,7 +94,7 @@ void Enemy::EnemyAnim(void)
 
 bool Enemy::HitCheck(std::vector<shared_Obj> list)
 {
-	for (auto itr : list) {
+	/*for (auto itr : list) {
 		auto pos = itr->pos();
 		Vector2 size = itr->size();
 		if (itr->GetUnitType() == UNIT::SHOT && _alive && !itr->isDeath())
@@ -111,7 +109,7 @@ bool Enemy::HitCheck(std::vector<shared_Obj> list)
 				return true;
 			}
 		}
-	}
+	}*/
 	return false;
 }
 
@@ -205,8 +203,10 @@ void Enemy::M_Aiming(void)
 
 void Enemy::M_Swirl(void)
 {
+	// Šp“x(×¼Þ±Ý’l)
 	_rad += (4.5 + AddAngle) * DX_PI / 180;
 	AddAngle += 5 * DX_PI / 180;
+
 	_pos.y -= sin(_rad) * _speed.y;
 	
 	Vector2_D move = _pos;
@@ -267,7 +267,7 @@ void Enemy::M_Shoot(void)
 
 bool Enemy::shot(void)
 {
-	if (CheckHitKey(KEY_INPUT_I))
+	if (rand() % 600 == 0)
 	{
 		return _shotF = true;
 	}

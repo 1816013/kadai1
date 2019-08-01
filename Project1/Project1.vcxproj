@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Input\InputState.cpp" />
     <ClCompile Include="Input\INPUT_ID.cpp" />
     <ClCompile Include="Input\KeyState.cpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="_DebugDispOut.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Collision.h" />
     <ClInclude Include="common\details\VECTOR2.h" />
     <ClInclude Include="Input\InputState.h" />
     <ClInclude Include="Input\INPUT_ID.h" />

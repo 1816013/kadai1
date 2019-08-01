@@ -76,7 +76,6 @@ private:
 
 	Vector2_D _movement;
 
-
 	// ÄØ¶Þ°·°—p
 	bool _newKey;
 	bool _lastKey;

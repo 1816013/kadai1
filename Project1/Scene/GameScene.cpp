@@ -8,6 +8,7 @@
 #include "Shot.h"
 #include "_DebugConOut.h"
 #include "_DebugDispOut.h"
+#include <Input/KeyState.h>
 
 //#include <Input/InputState.h>
 //#include <Input/KeyState.h>
@@ -15,8 +16,8 @@
 GameScene::GameScene()
 {
 	Init();
-	_cnt = 0;
 	_arrivalCnt = 0;
+	_inputState = std::make_unique<KeyState>();
 }
 
 GameScene::~GameScene()
@@ -25,6 +26,7 @@ GameScene::~GameScene()
 
 unique_Base GameScene::Update(unique_Base own)
 {
+	_inputState->Update();
 	Vector2_D _pos[6] = 
 	{
 		{ (double)0 - 16,(double)0  - 16},
@@ -42,13 +44,6 @@ unique_Base GameScene::Update(unique_Base own)
 			aim[y * 7 + x] = {(double) 32 + (x * 32), (double)32 + (y * 32) };
 		}
 	}*/
-
-	Vector2_D sigAim[2];
-	Vector2_D sigAim2[2];
-	sigAim[1] = {(double)300, (double)lpSceneMng.gameScreenSize.y / 2 - 16 };
-	sigAim[0] = {(double)200, (double)lpSceneMng.gameScreenSize.y / 2 - 16 };
-	sigAim2[1] = { (double)100, (double)lpSceneMng.gameScreenSize.y - 48 };
-	sigAim2[0] = { (double)400, (double)lpSceneMng.gameScreenSize.y - 48 };
 
 
 	size_t a = _bossAim.size() + _goeiAim.size() + _zakoAim.size();
@@ -118,7 +113,6 @@ unique_Base GameScene::Update(unique_Base own)
 	_arrivalCnt++;
 	
 
-	Vector2_D pPos;
 	for (auto& itr : _objList)		// ”ÍˆÍfor•¶shared_ptr‚ðŽg‚¤‚Æ‚Å‚«‚éunique_ptr‚Å‚àauto&‚ðŽg‚¦‚Î‚Å‚«‚é
 	{
 		itr->HitCheck(_objList);
@@ -126,42 +120,40 @@ unique_Base GameScene::Update(unique_Base own)
  	for (auto& itr : _objList)
 	{
 		itr->Update();
-		if (itr->GetUnitType() == UNIT::PLAYER)
+		if (itr->GetUnitType() != UNIT::SHOT && itr->isShot())
 		{
-			pPos = itr->pos();
+			 _shotList.emplace_back(itr->pos(), itr->GetUnitType());
 		}
 	}
-	_objList.erase(std::remove_if(
-				   _objList.begin(),
-				   _objList.end(),
-					[](shared_Obj& obj) { return (*obj).isDeath(); }), 
-				   _objList.end());
-
 	size_t s_count = std::count_if(_objList.begin(), _objList.end(),
 		[](shared_Obj& obj)->bool {return ((*obj).GetUnitType() == UNIT::SHOT); }
 	);
 	size_t p_count = std::count_if(_objList.begin(), _objList.end(),
 		[](shared_Obj& obj)->bool {return ((*obj).GetUnitType() == UNIT::PLAYER); }
 	);
-
-
-	pPos.y -= 16;
-	_lastKey2 = _newKey2;
-	_newKey2 = CheckHitKey(KEY_INPUT_SPACE);
-	if (_newKey2 && !_lastKey2)
+	
+	if (_shotList.size() > 0)
 	{
-		if (s_count < 2 * p_count)
+		for (auto itr : _shotList)
 		{
-			_objList.emplace_back(new Shot(pPos, Vector2(3, 8), UNIT::PLAYER));
+			if (itr.second == UNIT::PLAYER)
+			{
+				_objList.emplace_back(new Shot(itr, Vector2(3, 8)));
+			}
+			if (itr.second == UNIT::ENEMY)
+			{
+				_objList.emplace_back(new Shot(itr, Vector2(3, 8)));
+			}
 		}
+		_shotList.erase(_shotList.begin(), _shotList.end());
 	}
-	/*if (isShot())
-	{
-		if (s_count < 2 * p_count)
-		{
-			_objList.emplace_back(new Shot(pPos, Vector2(3, 8), UNIT::PLAYER));
-		}
-	}*/
+
+
+	_objList.erase(std::remove_if(
+		_objList.begin(),
+		_objList.end(),
+		[](shared_Obj& obj) { return (*obj).isDeath(); }),
+		_objList.end());
 	Draw();
 
 	return std::move(own);
@@ -174,8 +166,7 @@ SCN_ID GameScene::GetSceneID(void)
 
 void GameScene::EnemyInstance(ENEMY_T state)
 {
-	_objList.emplace_back(new Enemy(state));	// 0”Ô–Ú
-	_cnt++;
+	_objList.emplace_back(new Enemy(state));	
 	/*for (int y = 0; y < 3; y++)
 	{
 		for (int x = 0; x < 3; x++)
@@ -189,7 +180,12 @@ bool GameScene::Init(void)
 {
 	_ghGameScreen = MakeScreen(lpSceneMng.gameScreenSize.x, lpSceneMng.gameScreenSize.y, true);
 	_objList.emplace_back(new Player(Vector2_D(lpSceneMng.gameScreenSize.x / 2 - 16, lpSceneMng.gameScreenSize.y - 16), Vector2(30, 32)));
-	
+	sigAim[1] = { (double)300, (double)lpSceneMng.gameScreenSize.y / 2 - 16 };
+	sigAim[0] = { (double)200, (double)lpSceneMng.gameScreenSize.y / 2 - 16 };
+	sigAim2[1] = { (double)100, (double)lpSceneMng.gameScreenSize.y - 48 };
+	sigAim2[0] = { (double)400, (double)lpSceneMng.gameScreenSize.y - 48 };
+
+
 	srand(time(NULL));
 	return true;
 }

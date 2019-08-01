@@ -14,7 +14,8 @@ Player::Player()
 	_alive = true;
 }
 
-Player::Player(Vector2_D vec, Vector2 size)
+
+Player::Player(const Vector2_D& vec, const Vector2& size)
 {
 	//animKey(ANIM::NOMAL);
 	init();
@@ -40,7 +41,14 @@ void Player::Update(void)
 		_alive = false;
 		animKey(ANIM::DEATH);
 	}*/
-
+	if (_inputState->state(INPUT_ID::BTN_1).first && !_inputState->state(INPUT_ID::BTN_1).second)
+	{
+		_shotF = true;
+	}
+	else
+	{
+		_shotF = false;
+	}
 
 	_inputState->Update();
 	if (_inputState->state(INPUT_ID::LEFT).first)
@@ -51,7 +59,7 @@ void Player::Update(void)
 	{
 		_pos.x++;
 	}
-	if (_inputState->state(INPUT_ID::AIMING).first)
+	if (_inputState->state(INPUT_ID::UP).first)
 	{
 		_pos.y--;
 	}
