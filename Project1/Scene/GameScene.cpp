@@ -27,6 +27,7 @@ GameScene::~GameScene()
 
 unique_Base GameScene::Update(unique_Base own)
 {
+	_col->Update(_objList);
 	_inputState->Update();
 	Vector2_D _pos[6] = 
 	{
@@ -154,10 +155,11 @@ unique_Base GameScene::Update(unique_Base own)
 		for (auto itr : _shotList)
 		{
 			_objList.emplace_back(new Shot(itr, Vector2(3, 8)));
+			
 		}
 		_shotList.erase(_shotList.begin(), _shotList.end());
 	}
-
+	//std::sort(_objList.begin(),_objList.end(), std::greater<int>());
 
 	_objList.erase(std::remove_if(
 		_objList.begin(),
