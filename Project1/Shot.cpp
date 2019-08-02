@@ -44,7 +44,14 @@ void Shot::Update(void)
 
 UNIT Shot::GetUnitType(void)
 {
-	return UNIT::SHOT;
+	if (_uType == UNIT::PLAYER)
+	{
+		return UNIT::P_SHOT;
+	}
+	if (_uType == UNIT::ENEMY)
+	{
+		return UNIT::E_SHOT;
+	}
 }
 
 void Shot::Draw(void)

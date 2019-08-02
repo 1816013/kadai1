@@ -85,6 +85,13 @@ const Vector2 Obj::size(void) const
 	return _size;
 }
 
+bool Obj::AllArrivalF(bool flag)
+{
+	return _AllArrivalF = flag;
+}
+
+
+
 bool Obj::SetAnim(const ANIM key, AnimVector& data)
 {
 	return _animMap.try_emplace(key, std::move(data)).second; 

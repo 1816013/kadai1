@@ -7,6 +7,7 @@
 #include <Unit/Enemy.h>
 #include "Shot.h"
 #include <Input/InputState.h>
+#include "Collision.h"
 
 using vecVec2_D = std::vector<Vector2_D>;
 
@@ -35,6 +36,9 @@ private:
 	std::vector<ShotPair> _shotList;
 	bool _newKey;
 	bool _lastKey;
-	int _arrivalCnt;
+	int _popCnt;
+
+
+	std::unique_ptr<Collision> _col;
 };
 

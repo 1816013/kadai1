@@ -23,6 +23,7 @@ Player::Player(const Vector2_D& vec, const Vector2& size)
 	_pos = vec;
 	_size = size;
 	_alive = true;
+	_speed = { 4,4 };
 	//TRACE("vec.x %d\n", vec.x);
 }
 
@@ -53,11 +54,11 @@ void Player::Update(void)
 	_inputState->Update();
 	if (_inputState->state(INPUT_ID::LEFT).first)
 	{
-		_pos.x--;
+		_pos.x -= _speed.x;
 	}
 	if (_inputState->state(INPUT_ID::RIGHT).first)
 	{
-		_pos.x++;
+		_pos.x += _speed.x;
 	}
 	if (_inputState->state(INPUT_ID::UP).first)
 	{

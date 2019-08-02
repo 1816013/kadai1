@@ -2,11 +2,11 @@
 
 
 
-collision::collision()
+Collision::Collision()
 {
 }
 
 
-collision::~collision()
+Collision::~Collision()
 {
 }

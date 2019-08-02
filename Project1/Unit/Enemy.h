@@ -49,7 +49,8 @@ public:
 	UNIT GetUnitType(void) override;		// Ç®ëOÇÕ¥»–∞Ç©ÅH
 	void EnemyAnim(void);					// ¥»–∞ÇÃ±∆“∞ºÆ›ÇÇªÇÎÇ¶ÇÈ
 	bool HitCheck(std::vector<shared_Obj> list) override;	// ìñÇΩÇËîªíË
-
+	
+private:
 	void(Enemy::*move)(void);				// ä÷êîŒﬂ≤›¿
 	void SetMoveProc(void);
 	void M_Sigmoid(void);
@@ -57,28 +58,25 @@ public:
 	void M_Swirl(void);
 	void M_Wait(void);
 	void M_ZOOM(void);
-
-
 	bool shot(void);
-private:
 	bool init(void) override;
+
 	E_TYPE _eType;
 	E_AIM _aim;
 	int _aimCnt = 0;
 	float _rad;
-	Vector2_D _speed = { 8,8 };
 	double Add;
 	double AddAngle;
 	Vector2_D _startP;
-	Vector2_D Aim;
 	int WaitCnt = 0;
 	int WaitTime;
 
 	Vector2_D storagePos;
-	double AddRange = 0.01f;
-	double nowRange = 1.0f;
-	double maxRange = 1.6f;
-	double minRange = 1.0f;
+	
+	Vector2_D nowRange = { 1.0f, 1.0f };
+	Vector2_D maxRange = { 1.35f, 1.1f };
+	Vector2_D minRange = { 1.0f, 1.0f };
+	Vector2_D AddRange = (maxRange - minRange) / 50.0;
 
 	Vector2_D _movement;
 

@@ -25,7 +25,8 @@ Enemy::Enemy(const ENEMY_T& state)
 	_startP = _pos;
 	_alive = true;
 	_death = false;
-	Aim = {(double) 100, (double)lpSceneMng.gameScreenSize.y / 2 - 16 };
+	_arrivalF = false;
+	_speed = { 8,8 };
 	Add = -10;
 	_angle = 0;
 	_rad = 0;
@@ -193,6 +194,11 @@ void Enemy::M_Aiming(void)
 	{
 		_angle = 0;
 		storagePos = _aim[_aimCnt].first;
+		_arrivalF = true;
+		if(_AllArrivalF)
+		{
+			_aimCnt++;
+		}
 	}
 	else
 	{
@@ -200,7 +206,7 @@ void Enemy::M_Aiming(void)
 	}
 	if (CheckHitKey(KEY_INPUT_RETURN))
 	{
-		_aimCnt++;
+		
 	}
 	
 }
@@ -249,12 +255,11 @@ void Enemy::M_Wait(void)
 
 void Enemy::M_ZOOM(void)
 {
-	Vector2_D range = _aim[_aimCnt].first - storagePos;
+	Vector2_D range = storagePos - _aim[_aimCnt].first;
 	
 	range *= nowRange;
 	
 	_pos = range + _aim[_aimCnt].first;
-	_pos.y *= -1;
 	nowRange += AddRange;
 	if (nowRange < minRange || nowRange > maxRange)
 	{

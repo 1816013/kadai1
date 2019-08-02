@@ -1,10 +1,10 @@
 #pragma once
-class collision
+class Collision
 {
 public:
-	collision();
-	~collision();
+	Collision();
+	~Collision();
 
-	bool RectAngle(void);
+	//bool RectAngle(void);
 };
 

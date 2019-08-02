@@ -1,3 +1,4 @@
+#include "..\VECTOR2.h"
 #pragma once
 //#include "../VECTOR2.h"	// ‚È‚­‚Ä‚à‚æ‚¢
 // detail
@@ -100,6 +101,14 @@ Vector2Temple<T> & Vector2Temple<T>::operator+=(const Vector2Temple & vec)
 }
 
 template<class T>
+inline Vector2Temple<T> & Vector2Temple<T>::operator+=(T k)
+{
+	this->x += k;
+	this->y += k;
+	return (*this);
+}
+
+template<class T>
 Vector2Temple<T> & Vector2Temple<T>::operator-=(const Vector2Temple & vec)
 {
 	this->x -= vec.x;
@@ -112,6 +121,14 @@ Vector2Temple<T> & Vector2Temple<T>::operator*=(T k)
 {
 	this->x *= k;
 	this->y *= k;
+	return (*this);
+}
+
+template<class T>
+inline Vector2Temple<T> & Vector2Temple<T>::operator*=(const Vector2Temple & vec)
+{
+	this->x *= vec.x;
+	this->y *= vec.y;
 	return (*this);
 }
 

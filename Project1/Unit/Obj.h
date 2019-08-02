@@ -15,8 +15,9 @@ enum class ANIM
 enum class UNIT
 {
 	PLAYER,
+	P_SHOT,
 	ENEMY,
-	SHOT,
+	E_SHOT,
 	MAX
 };
 
@@ -45,6 +46,11 @@ public:
 	bool isAlive(void) { return _alive; };	// 叙述関数(ﾌﾟﾚﾃﾞｨｹｰﾄ)
 	bool isDeath(void) { return _death; };	// 叙述関数(ﾌﾟﾚﾃﾞｨｹｰﾄ)
 	bool isShot(void) { return _shotF; };
+	// 仮
+	bool isArrival(void) { return _arrivalF;};
+	bool AllArrivalF(bool flag);
+	
+
 private:
 	std::map<ANIM, AnimVector> _animMap;
 	ANIM _animKey;						// ｱﾆﾒｰｼｮﾝの名前
@@ -57,10 +63,15 @@ protected:
 	bool DestroyProc(void);
 	Vector2_D _pos;						// ｷｬﾗの座標
 	Vector2 _size;						// ｷｬﾗのｻｲｽﾞ
+	Vector2_D _speed;
 	bool _alive;						// 生きているか
 	bool _death;
 	float _angle;
 	int _life;
 	bool _shotF;
+	
+	// 仮
+	bool _arrivalF;
+	bool _AllArrivalF;
 };
 

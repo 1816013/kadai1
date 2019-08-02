@@ -27,8 +27,10 @@ public:
 	// ’P€‰‰Zq
 
 	Vector2Temple& operator+=(const Vector2Temple& vec);
+	Vector2Temple& operator+=(T k);
 	Vector2Temple& operator-=(const Vector2Temple& vec);
 	Vector2Temple& operator*=(T k);
+	Vector2Temple& operator*=(const Vector2Temple& vec);
 	Vector2Temple& operator/=(T k);
 	Vector2Temple operator+()const;
 	Vector2Temple operator-()const;

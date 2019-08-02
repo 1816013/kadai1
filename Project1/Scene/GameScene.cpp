@@ -16,8 +16,9 @@
 GameScene::GameScene()
 {
 	Init();
-	_arrivalCnt = 0;
+	_popCnt = 0;
 	_inputState = std::make_unique<KeyState>();
+	_col = std::make_unique<Collision>();
 }
 
 GameScene::~GameScene()
@@ -46,10 +47,10 @@ unique_Base GameScene::Update(unique_Base own)
 	}*/
 
 
-	size_t a = _bossAim.size() + _goeiAim.size() + _zakoAim.size();
+	auto a = _bossAim.size() + _goeiAim.size() + _zakoAim.size();
 	_lastKey = _newKey;
 	_newKey = CheckHitKey(KEY_INPUT_R);
-	if (_newKey && !_lastKey || _arrivalCnt % 120 == 0 && a < 40)
+	if (_newKey && !_lastKey || _popCnt % 120 == 0 && a < 40)
 	{
 		int no = rand() % 6;
 		for (int i = 0; i < 5; i++)
@@ -104,46 +105,55 @@ unique_Base GameScene::Update(unique_Base own)
 				}
 			}
 
-			eMoveCon.emplace_back(Vector2_D( lpSceneMng.gameScreenSize.x / 2 , 0), E_MOVE_TYPE::ZOOM);
+			eMoveCon.emplace_back(Vector2_D( lpSceneMng.gameScreenSize.x / 2 , 32), E_MOVE_TYPE::ZOOM);
 
 			EnemyInstance({ _pos[no], Vector2(30, 32),randType, move(eMoveCon), i * 8 });
 		}
 	}
-
-	_arrivalCnt++;
+	_popCnt++;
 	
 
+	int arrivalCnt = std::count_if(_objList.begin(), _objList.end(),
+		[](shared_Obj& obj)->bool {return ((*obj).isArrival() == true); }
+	);
 	for (auto& itr : _objList)		// ”ÍˆÍfor•¶shared_ptr‚ðŽg‚¤‚Æ‚Å‚«‚éunique_ptr‚Å‚àauto&‚ðŽg‚¦‚Î‚Å‚«‚é
 	{
-		itr->HitCheck(_objList);
+		//itr->HitCheck(_objList);
+		if (arrivalCnt >= 40)
+		{
+			itr->AllArrivalF(true);
+		}
 	}
+
+	size_t plS_count = std::count_if(_objList.begin(), _objList.end(),
+		[](shared_Obj& obj)->bool {return ((*obj).GetUnitType() == UNIT::P_SHOT); }
+	);
+
  	for (auto& itr : _objList)
 	{
 		itr->Update();
-		if (itr->GetUnitType() != UNIT::SHOT && itr->isShot())
+		if (itr->isShot())
 		{
-			 _shotList.emplace_back(itr->pos(), itr->GetUnitType());
+			if (itr->GetUnitType() == UNIT::PLAYER && plS_count < 2)
+			{
+				_shotList.emplace_back(itr->pos(), itr->GetUnitType());
+			}
+			if (itr->GetUnitType() == UNIT::ENEMY)
+			{
+				_shotList.emplace_back(itr->pos(), itr->GetUnitType());
+			}
 		}
 	}
-	size_t s_count = std::count_if(_objList.begin(), _objList.end(),
-		[](shared_Obj& obj)->bool {return ((*obj).GetUnitType() == UNIT::SHOT); }
-	);
-	size_t p_count = std::count_if(_objList.begin(), _objList.end(),
+	
+	/*size_t p_count = std::count_if(_objList.begin(), _objList.end(),
 		[](shared_Obj& obj)->bool {return ((*obj).GetUnitType() == UNIT::PLAYER); }
-	);
+	);*/
 	
 	if (_shotList.size() > 0)
 	{
 		for (auto itr : _shotList)
 		{
-			if (itr.second == UNIT::PLAYER)
-			{
-				_objList.emplace_back(new Shot(itr, Vector2(3, 8)));
-			}
-			if (itr.second == UNIT::ENEMY)
-			{
-				_objList.emplace_back(new Shot(itr, Vector2(3, 8)));
-			}
+			_objList.emplace_back(new Shot(itr, Vector2(3, 8)));
 		}
 		_shotList.erase(_shotList.begin(), _shotList.end());
 	}
@@ -154,6 +164,7 @@ unique_Base GameScene::Update(unique_Base own)
 		_objList.end(),
 		[](shared_Obj& obj) { return (*obj).isDeath(); }),
 		_objList.end());
+
 	Draw();
 
 	return std::move(own);
