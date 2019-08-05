@@ -15,6 +15,7 @@ Shot::Shot(ShotPair state,Vector2 size)
 	_pos = state.first;
 	_size = size;
 	_uType = state.second;
+	_alive = true;
 
 	init();
 }
@@ -36,7 +37,7 @@ void Shot::Update(void)
 		_pos.y += 7;
 		_angle = 180 * DX_PI / 180;
 	}
-	if (_pos.y < 0 || _pos.y > lpSceneMng.gameScreenSize.y)
+	if (_pos.y < 0 || _pos.y > lpSceneMng.gameScreenSize.y || !_alive)
 	{
 		_death = true;
 	}

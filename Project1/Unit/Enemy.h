@@ -3,36 +3,36 @@
 #include <vector>
 #include "Obj.h"
 
-enum class E_STATE
+enum class E_STATE	// ｴﾈﾐｰｽﾃｰﾀｽ
 {
-	VECTOR,
-	SIZE,
-	TYPE,
-	AIM,
-	WAITC,
+	VECTOR,		// 座標
+	SIZE,		// ｻｲｽﾞ
+	TYPE,		// 種類
+	AIM,		// 目標点
+	WAITC,		// 待機時間
 	MAX
 };
 
-enum class E_TYPE
+enum class E_TYPE	// ｴﾈﾐｰの種類
 {
-	ZAKO,
-	GOEI,
-	BOSS,	
+	ZAKO,	// ｻﾞｺ
+	GOEI,	// ｺﾞｴｲ
+	BOSS,	// ﾎﾞｽ
 	MAX
 };
 
-enum class E_MOVE_TYPE
+enum class E_MOVE_TYPE	// 移動ﾀｲﾌﾟ
 {
-	WAIT,
-	SIGMOID,
-	SWIRL,
-	AIMING,
-	ZOOM,
+	WAIT,		// 待機
+	SIGMOID,	// ｼｸﾞﾓｲﾄﾞ
+	SWIRL,		// 渦巻
+	AIMING,		// 一直線
+	ZOOM,		// 拡大縮小
 	MAX
 };
 
-using E_AIM = std::vector<std::pair<Vector2_D, E_MOVE_TYPE>>;	// 1つ目の要素は 目標座標, 二つ目の要素は移動タイプ
-using ENEMY_T = std::tuple<Vector2_D, Vector2, E_TYPE, E_AIM, int>;
+using E_AIM = std::vector<std::pair<Vector2_D, E_MOVE_TYPE>>;	//  目標座標, 移動タイプ
+using ENEMY_T = std::tuple<Vector2_D, Vector2, E_TYPE, E_AIM, int>;	// 座標, ｻｲｽﾞ, 種類, 目標座標, 待機時間 
 
 
 
@@ -52,37 +52,30 @@ public:
 	
 private:
 	void(Enemy::*move)(void);				// 関数ﾎﾟｲﾝﾀ
-	void SetMoveProc(void);
-	void M_Sigmoid(void);
-	void M_Aiming(void);
-	void M_Swirl(void);
-	void M_Wait(void);
-	void M_ZOOM(void);
-	bool shot(void);
+	void SetMoveProc(void);		// 移動制御
+	void M_Sigmoid(void);		// ｼｸﾞﾓｲﾄﾞ曲線
+	void M_Aiming(void);		// 最終目標に移動
+	void M_Swirl(void);			// 渦巻移動
+	void M_Wait(void);			// 編隊用待機
+	void M_ZOOM(void);			// 拡大縮小
+	bool shot(void);			// ｴﾈﾐｰのｼｮｯﾄ
 	bool init(void) override;
 
-	E_TYPE _eType;
-	E_AIM _aim;
-	int _aimCnt = 0;
-	float _rad;
-	double Add;
-	double AddAngle;
-	Vector2_D _startP;
-	int WaitCnt = 0;
-	int WaitTime;
+	E_TYPE _eType;		// ｴﾈﾐｰの種類
+	E_AIM _aim;			// ｴﾈﾐｰの目標座標
+	int _aimCnt = 0;	// ｴﾈﾐｰの移動順のｶｳﾝﾀ
+	float _rad;			// 渦巻の角度
+	double Add;			// ｼｸﾞﾓｲﾄﾞ用-10～10まで			
+	double AddAngle;	// 渦巻の角度加算用の角度
+	Vector2_D _startP;	// ｴﾈﾐｰの初期出現座標
+	int WaitCnt = 0;	// 待機用ｶｳﾝﾀ
+	int WaitTime;		// 待機時間
 
-	Vector2_D storagePos;
+	Vector2_D storagePos;	// ｽﾞｰﾑ用最終地点を記録する用
 	
-	Vector2_D nowRange = { 1.0f, 1.0f };
-	Vector2_D maxRange = { 1.35f, 1.1f };
-	Vector2_D minRange = { 1.0f, 1.0f };
-	Vector2_D AddRange = (maxRange - minRange) / 50.0;
-
-	Vector2_D _movement;
-
-	// ﾄﾘｶﾞｰｷｰ用
-	bool _newKey;
-	bool _lastKey;
-
+	Vector2_D nowRange = { 1.0f, 1.0f };	// 現在のｽﾞｰﾑ倍率
+	Vector2_D maxRange = { 1.35f, 1.1f };	// 最大ｽﾞｰﾑ倍率
+	Vector2_D minRange = { 1.0f, 1.0f };	// 最小ｽﾞｰﾑ倍率
+	Vector2_D AddRange = (maxRange - minRange) / 50.0;	// ｽﾞｰﾑ倍率変更用
 };
 

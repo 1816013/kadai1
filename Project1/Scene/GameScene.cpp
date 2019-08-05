@@ -9,6 +9,7 @@
 #include "_DebugConOut.h"
 #include "_DebugDispOut.h"
 #include <Input/KeyState.h>
+#include <common/ImageMng.h>
 
 //#include <Input/InputState.h>
 //#include <Input/KeyState.h>
@@ -19,6 +20,7 @@ GameScene::GameScene()
 	_popCnt = 0;
 	_inputState = std::make_unique<KeyState>();
 	_col = std::make_unique<Collision>();
+	_arrivalCnt = 0;
 }
 
 GameScene::~GameScene()
@@ -38,6 +40,14 @@ unique_Base GameScene::Update(unique_Base own)
 		{ (double)lpSceneMng.gameScreenSize.x + 16,(double)lpSceneMng.gameScreenSize.y / 2 - 16},
 		{ (double)lpSceneMng.gameScreenSize.x + 16, (double)lpSceneMng.gameScreenSize.y - 48}
 	};
+
+	Vector2_D sigAim[2];	// ｼｸﾞﾓｲﾄﾞの目標座標
+	Vector2_D sigAim2[2];
+	sigAim[1] = { (double)300, (double)lpSceneMng.gameScreenSize.y / 2 - 16 };
+	sigAim[0] = { (double)200, (double)lpSceneMng.gameScreenSize.y / 2 - 16 };
+	sigAim2[1] = { (double)100, (double)lpSceneMng.gameScreenSize.y - 48 };
+	sigAim2[0] = { (double)400, (double)lpSceneMng.gameScreenSize.y - 48 };
+
 	/*Vector2_D aim[42];
 	for (int y = 0; y < 6; y++)
 	{
@@ -71,8 +81,7 @@ unique_Base GameScene::Update(unique_Base own)
 				eMoveCon.emplace_back(sigAim[1], E_MOVE_TYPE::SIGMOID);
 				eMoveCon.emplace_back(sigAim2[1], E_MOVE_TYPE::SIGMOID);
 				eMoveCon.emplace_back(sigAim2[1], E_MOVE_TYPE::SWIRL);
-			}
-			
+			}			
 			if (randType == E_TYPE::BOSS)
 			{
 				if (_bossAim.size() < 4)
@@ -111,16 +120,20 @@ unique_Base GameScene::Update(unique_Base own)
 			EnemyInstance({ _pos[no], Vector2(30, 32),randType, move(eMoveCon), i * 8 });
 		}
 	}
-	_popCnt++;
 	
+	if(a >= 40)
+	{
+		_arrivalCnt++;
+	}
+	_popCnt++;
 
-	int arrivalCnt = std::count_if(_objList.begin(), _objList.end(),
+
+	/*int arrivalCnt = std::count_if(_objList.begin(), _objList.end(),
 		[](shared_Obj& obj)->bool {return ((*obj).isArrival() == true); }
-	);
+	);*/
 	for (auto& itr : _objList)		// 範囲for文shared_ptrを使うとできるunique_ptrでもauto&を使えばできる
 	{
-		//itr->HitCheck(_objList);
-		if (arrivalCnt >= 40)
+		if (_arrivalCnt >= 270)
 		{
 			itr->AllArrivalF(true);
 		}
@@ -155,11 +168,13 @@ unique_Base GameScene::Update(unique_Base own)
 		for (auto itr : _shotList)
 		{
 			_objList.emplace_back(new Shot(itr, Vector2(3, 8)));
-			
 		}
+		std::sort(_objList.begin(),
+			_objList.end(),
+			[](shared_Obj& obj, shared_Obj& obj2) { return (*obj).GetUnitType() < (*obj2).GetUnitType(); });
 		_shotList.erase(_shotList.begin(), _shotList.end());
 	}
-	//std::sort(_objList.begin(),_objList.end(), std::greater<int>());
+	
 
 	_objList.erase(std::remove_if(
 		_objList.begin(),
@@ -189,14 +204,50 @@ void GameScene::EnemyInstance(ENEMY_T state)
 	}*/
 }
 
+void GameScene::DrawChar(std::string str, Vector2 pos)
+{
+	int drawID;
+	int Drawpos = 0;
+	for (auto charCode : str)
+	{
+		if (charCode < 'A' || charCode > 'Z')
+		{
+			switch (charCode)
+			{
+			case'-':
+				drawID = 26;
+				break;
+			case'%':
+				drawID = 27;
+				break;
+			case'.':
+				drawID = 28;
+				break;
+			case'!':
+				drawID = 29;
+				break;
+			default:
+				drawID = -1;
+				break;
+			}
+		}
+		else
+		{
+			drawID = charCode - 'A';
+		}
+		if (drawID != -1)
+		{
+			DrawGraph(pos.x + 16 * Drawpos, pos.y, IMAGE_ID("文字")[drawID], true);
+		}
+		Drawpos++;
+	}
+}
+
 bool GameScene::Init(void)
 {
 	_ghGameScreen = MakeScreen(lpSceneMng.gameScreenSize.x, lpSceneMng.gameScreenSize.y, true);
 	_objList.emplace_back(new Player(Vector2_D(lpSceneMng.gameScreenSize.x / 2 - 16, lpSceneMng.gameScreenSize.y - 16), Vector2(30, 32)));
-	sigAim[1] = { (double)300, (double)lpSceneMng.gameScreenSize.y / 2 - 16 };
-	sigAim[0] = { (double)200, (double)lpSceneMng.gameScreenSize.y / 2 - 16 };
-	sigAim2[1] = { (double)100, (double)lpSceneMng.gameScreenSize.y - 48 };
-	sigAim2[0] = { (double)400, (double)lpSceneMng.gameScreenSize.y - 48 };
+	
 
 
 	srand(time(NULL));
@@ -209,7 +260,7 @@ void GameScene::Draw(void)
 	ghBefor = GetDrawScreen();
 	SetDrawScreen(_ghGameScreen);	
 	ClsDrawScreen(); //画面消去
-
+	//DrawChar("HELLO", {50, 200});
 	//for (auto itr = _objList.begin();	// unique_ptrだとある程度べた書き
 	//	itr != _objList.end();
 	//	itr++)

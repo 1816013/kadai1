@@ -33,15 +33,14 @@ Player::~Player()
 
 void Player::Update(void)
 {
-	/*if (DestroyProc())
+	if (!_alive)
+	{
+		animKey(ANIM::DEATH);
+	}
+	if (DestroyProc())
 	{
 		return;
 	}
-	if (rand() % 600 == 0)
-	{
-		_alive = false;
-		animKey(ANIM::DEATH);
-	}*/
 	if (_inputState->state(INPUT_ID::BTN_1).first && !_inputState->state(INPUT_ID::BTN_1).second)
 	{
 		_shotF = true;

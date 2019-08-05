@@ -16,6 +16,7 @@ void SceneMng::Run(void)
 	ImageMng::GetInstance().GetID("·¬×", "image/char.png", Vector2(10, 10), Vector2(30, 32));
 	ImageMng::GetInstance().GetID("“G”š”­", "image/en_blast.png", Vector2(5, 1), Vector2(64, 64));
 	ImageMng::GetInstance().GetID("Ž©‹@”š”­", "image/pl_blast.png", Vector2(4, 1), Vector2(64, 64));
+	ImageMng::GetInstance().GetID("•¶Žš", "image/text.png", Vector2(30, 1), Vector2(16, 16));
 
 
 	_activeScene = std::make_unique<GameScene>();

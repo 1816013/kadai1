@@ -25,7 +25,6 @@ Enemy::Enemy(const ENEMY_T& state)
 	_startP = _pos;
 	_alive = true;
 	_death = false;
-	_arrivalF = false;
 	_speed = { 8,8 };
 	Add = -10;
 	_angle = 0;
@@ -39,8 +38,7 @@ Enemy::Enemy(const ENEMY_T& state)
 	{
 		_life = 1;
 	}
-	_movement = { 0, 0 };
-	
+
 	init();
 	
 	TRACE("enemyÇÃê∂ê¨\n");
@@ -58,7 +56,11 @@ void Enemy::Draw(void)
 
 void Enemy::Update(void)
 {
-	_dbgDrawCircle(_pos.x, _pos.y, _size.x / 2, 0xff0000, true);
+	
+	if (!_alive)
+	{
+		animKey(ANIM::DEATH);
+	}
 	if (DestroyProc())
 	{
 		return;
@@ -66,8 +68,8 @@ void Enemy::Update(void)
 	if (_life <= 0)
 	{
 		_alive = false;
-		animKey(ANIM::DEATH);
 	}
+	
 	if (_eType == E_TYPE::BOSS)
 	{
 		if (_life == 1 && animKey() == ANIM::NOMAL)
@@ -80,7 +82,7 @@ void Enemy::Update(void)
 	shot();
  	SetMoveProc();
 	(this->*move)();
-	
+	_dbgDrawCircle(_pos.x, _pos.y, _size.x / 2, 0xff0000, true);
 }
 
 UNIT Enemy::GetUnitType(void)
@@ -194,7 +196,6 @@ void Enemy::M_Aiming(void)
 	{
 		_angle = 0;
 		storagePos = _aim[_aimCnt].first;
-		_arrivalF = true;
 		if(_AllArrivalF)
 		{
 			_aimCnt++;
@@ -204,11 +205,6 @@ void Enemy::M_Aiming(void)
 	{
 		_angle = _rad + 90 * DX_PI / 180;
 	}
-	if (CheckHitKey(KEY_INPUT_RETURN))
-	{
-		
-	}
-	
 }
 
 void Enemy::M_Swirl(void)

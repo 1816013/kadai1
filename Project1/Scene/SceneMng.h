@@ -27,11 +27,11 @@ public:
 
 	bool addDrawQue(DrawQueT dQue);		// •`‰æ—p‚Ì·­°‚Éî•ñ‚ğ‘}“ü‚·‚é
 
-	const Vector2 screenSize;		// (800, 600)
-	const Vector2 gameScreenSize;	// (500, 390)
-	const Vector2 gameScreenPos;	// (^‚ñ’†)
+	const Vector2 screenSize;		// ³²İÄŞ³‚Ì»²½Ş(800, 600)
+	const Vector2 gameScreenSize;	// ¹Ş°Ñ½¸Ø°İ‚Ì»²½Ş(500, 390)
+	const Vector2 gameScreenPos;	// ¹Ş°Ñ½¸Ø°İ‚Ì¶ã‚Ìpos
 
-	int Frame(void);
+	int Frame(void);				// ±ÆÒ°¼®İ—pÌÚ°Ñ‚ğ“n‚·
 private:
 	struct SceneDeleter							// ÃŞØ°À°
 	{
@@ -45,16 +45,12 @@ private:
 
 	bool SysInit(void);	// ¼½ÃÑ‰Šú‰»(Å‰‚Ì‚İ‰Šú‰»‚·‚é‚à‚Ì)
 	void Draw(void);	// •`‰æ‚Ì·­°‚ğ‚à‚Æ‚É•`‰æ‚µ‚Ä‚¢‚­
-	
-
-
-
-	std::vector <DrawQueT> _drawList;	
+	std::vector <DrawQueT> _drawList;	// •`‰æ‚Ì·­°
 
 	// •Ï”
 	static std::unique_ptr<SceneMng, SceneDeleter> s_Instance;		
-	unique_Base _activeScene;					// Œ»İ‚Ì¼°İ
-	int frame = 0;
+	unique_Base _activeScene;		// Œ»İ‚Ì¼°İ
+	int frame = 0;		// ±ÆÒ°¼®İ—pÌÚ°Ñ
 
 
 };

@@ -85,6 +85,11 @@ const Vector2 Obj::size(void) const
 	return _size;
 }
 
+void Obj::SetAlive(bool flag)
+{
+	_alive = flag;
+}
+
 bool Obj::AllArrivalF(bool flag)
 {
 	return _AllArrivalF = flag;

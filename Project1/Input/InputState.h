@@ -2,8 +2,8 @@
 #include <map>
 #include "INPUT_ID.h"
 
-using KeyPair = std::pair<int, int>;		// ’†‚Ì(int, int) ‚Í (now, old)
-using KeyMap = std::map<INPUT_ID, KeyPair>;
+using KeyPair = std::pair<int, int>;		// <Œ»İ‚Ì·°‚Ìó‘Ô, 1ÌÚ°Ñ‘O‚Ì·°î•ñ>
+using KeyMap = std::map<INPUT_ID, KeyPair>;	// ·°‚ÌØ½Ä, ·°‚Ìó‘Ô 
 
 class InputState
 {

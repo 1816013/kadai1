@@ -41,14 +41,14 @@ public:
 	virtual bool HitCheck(std::vector<shared_Obj> list) = 0; // 当たり判定
 	const ANIM animKey(void) const;		// _animKeyの取得
 	bool animKey(const ANIM key);		// _animKeyの設定
-	const Vector2_D pos(void) const;		// ｵﾌﾞｼﾞｪｸﾄの座標取得
+	const Vector2_D pos(void) const;	// ｵﾌﾞｼﾞｪｸﾄの座標取得
 	const Vector2 size(void) const;		// ｵﾌﾞｼﾞｪｸﾄの大きさ取得
-	bool isAlive(void) { return _alive; };	// 叙述関数(ﾌﾟﾚﾃﾞｨｹｰﾄ)
-	bool isDeath(void) { return _death; };	// 叙述関数(ﾌﾟﾚﾃﾞｨｹｰﾄ)
-	bool isShot(void) { return _shotF; };
+	void SetAlive(bool flag);			// 生きているかの設定
+	bool isAlive(void) { return _alive; };	// 叙述関数(ﾌﾟﾚﾃﾞｨｹｰﾄ)やられたか
+	bool isDeath(void) { return _death; };	// 叙述関数(ﾌﾟﾚﾃﾞｨｹｰﾄ)死んでるか
+	bool isShot(void) { return _shotF; };	// 叙述関数(ﾌﾟﾚﾃﾞｨｹｰﾄ)撃っているか
 	// 仮
-	bool isArrival(void) { return _arrivalF;};
-	bool AllArrivalF(bool flag);
+	bool AllArrivalF(bool flag);		// 全員到着したかのｾｯﾄ
 	
 
 private:
@@ -59,19 +59,18 @@ private:
 protected:
 	int _animCnt;						// ｱﾆﾒｰｼｮﾝのｶｳﾝﾀ
 	bool SetAnim(const ANIM key, AnimVector& data);	// ｱﾆﾒｰｼｮﾝのｾｯﾄ
-	bool isAnimEnd(void);
-	bool DestroyProc(void);
+	bool isAnimEnd(void);				// ｱﾆﾒｰｼｮﾝの終了
+	bool DestroyProc(void);				// やられたあとの制御
 	Vector2_D _pos;						// ｷｬﾗの座標
 	Vector2 _size;						// ｷｬﾗのｻｲｽﾞ
-	Vector2_D _speed;
+	Vector2_D _speed;					// ｷｬﾗの速度
 	bool _alive;						// 生きているか
-	bool _death;
-	float _angle;
-	int _life;
-	bool _shotF;
+	bool _death;						// 死んでいるか
+	float _angle;						// 角度
+	int _life;							// HP
+	bool _shotF;						// ｼｮｯﾄ撃っているか
 	
 	// 仮
-	bool _arrivalF;
-	bool _AllArrivalF;
+	bool _AllArrivalF;					// 全員到着したか(ｴﾈﾐｰのみ)
 };
 

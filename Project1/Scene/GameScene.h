@@ -18,25 +18,29 @@ public:
 	GameScene();
 	~GameScene();
 	unique_Base Update(unique_Base own) override;	// 各ｱｯﾌﾟﾃﾞｰﾄをまとめる
-	void Draw(void);			// ｹﾞｰﾑｽｸﾘｰﾝでの描画
-	SCN_ID GetSceneID(void);	// 今どこのｼｰﾝ
-	void EnemyInstance(ENEMY_T state);
+	void Draw(void);								// ｹﾞｰﾑｽｸﾘｰﾝでの描画
+	SCN_ID GetSceneID(void);						// 今のｼｰﾝ
+	void EnemyInstance(ENEMY_T state);				// ｴﾈﾐｰをｲﾝｽﾀﾝｽする
 private:
+	void DrawChar(std::string str, Vector2 pos);	// 文字列の描画用
+
 	std::unique_ptr<InputState> _inputState;
 	std::vector<shared_Obj> _objList;	// ｷｬﾗ格納用
+	std::vector<ShotPair> _shotList;	// ｼｮｯﾄ一時格納ﾘｽﾄ
 	int _ghGameScreen;			// ｹﾞｰﾑ用ｽｸﾘｰﾝ
 	bool Init(void);			// ｲﾝｽﾀﾝｽなどの初期化
-	E_AIM eMoveCon;
-	Vector2_D sigAim[2];
-	Vector2_D sigAim2[2];
-	vecVec2_D _bossAim;
-	vecVec2_D _goeiAim;
-	vecVec2_D _zakoAim;
-	std::vector<vecVec2_D> _enAim;
-	std::vector<ShotPair> _shotList;
+	E_AIM eMoveCon;				// 目標座標と移動方法を格納するもの
+
+	// 仮
+	vecVec2_D _bossAim;			// ﾎﾞｽの最終目標
+	vecVec2_D _goeiAim;			// ｺﾞｴｲの最終目標
+	vecVec2_D _zakoAim;			// ｻﾞｺの最終目標
+	int _popCnt;				// ｴﾈﾐｰの出現間隔のｶｳﾝﾀ
+	int _arrivalCnt;			// ｴﾈﾐｰが全部出たら進めるｶｳﾝﾀ一定の量になるとｴﾈﾐｰの動きが変わる
+
+	// ﾃﾞﾊﾞｯｸﾞ用
 	bool _newKey;
-	bool _lastKey;
-	int _popCnt;
+	bool _lastKey;				// 
 
 
 	std::unique_ptr<Collision> _col;
