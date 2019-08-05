@@ -100,6 +100,6 @@ private:
 #define _dbgDrawTriangle(fmt, ...)
 #define _dbgDrawPixel(fmt, ...)
 //#define _dbgDrawFormatString(fmt, ...)
-#define _TdbgDrawFormatString(fmt, ...)
+#define _dbgDrawFormatString(fmt, ...)
 #endif	// _DEBUG
 

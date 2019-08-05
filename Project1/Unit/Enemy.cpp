@@ -244,7 +244,7 @@ void Enemy::M_Wait(void)
 {
 	if (WaitTime < WaitCnt)
 	{
-		_aimCnt++;
+		_aimCnt++;// ŽŸ‚Ìˆ—‚Éi‚Þ
 	}
 	WaitCnt++;
 }
