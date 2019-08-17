@@ -4,6 +4,9 @@
 #include <common/ImageMng.h>
 #include "SceneMng.h"
 #include <Scene/GameScene.h>
+#include <Scene/TitleScene.h>
+#include <Scene/GameoverScene.h>
+#include <Scene/ClearScene.h>
 #include "_DebugConOut.h"
 #include "_DebugDispOut.h"
 
@@ -19,12 +22,30 @@ void SceneMng::Run(void)
 	ImageMng::GetInstance().GetID("ï∂éö", "image/text.png", Vector2(30, 1), Vector2(16, 16));
 
 
-	_activeScene = std::make_unique<GameScene>();
+	_activeScene = std::make_unique<TitleScene>();
 	// ----------πﬁ∞—Ÿ∞Ãﬂ
 	while (!ProcessMessage() && !CheckHitKey(KEY_INPUT_ESCAPE))
 	{
 		_drawList.clear(); // ï`âÊÿΩƒÇÃèâä˙âª
 		// º∞›ä«óù
+		_nowScnID = _activeScene->GetSceneID();
+		_nextScnID = _activeScene->NextSceneID();
+		if (_nextScnID == SCN_ID::TITLE && _nowScnID != SCN_ID::TITLE)
+		{
+			_activeScene = std::make_unique<TitleScene>();
+		}
+		if (_nextScnID == SCN_ID::GAME && _nowScnID != SCN_ID::GAME)
+		{
+			_activeScene = std::make_unique<GameScene>();
+		}
+		if (_nextScnID == SCN_ID::GAMEOVER && _nowScnID != SCN_ID::GAMEOVER)
+		{
+			_activeScene = std::make_unique<GameoverScene>();
+		}
+		if (_nextScnID == SCN_ID::CLEAR && _nowScnID != SCN_ID::CLEAR)
+		{
+			_activeScene = std::make_unique<ClearScene>();
+		}
 		_activeScene = _activeScene->Update(std::move(_activeScene));
 		addDrawQue({ IMAGE_ID("òg")[0], 0, 0 });
 		Draw();
@@ -86,6 +107,7 @@ void SceneMng::Draw(void)
 	SetDrawScreen(DX_SCREEN_BACK);					//Ç–Ç∆Ç‹Ç∏ ﬁØ∏ ﬁØÃßÇ…ï`âÊ
 	ClsDrawScreen(); //âÊñ è¡ãé
 	// ∏ﬁ◊Ã®Ø∏ ›ƒﬁŸÇ∆ç¿ïWÇ™ïKóv
+	
 	for (auto _dQue : _drawList)
 	{
 		DrawGraph(std::get<static_cast<int> (DRAW_QUE::X)>(_dQue),
@@ -93,7 +115,7 @@ void SceneMng::Draw(void)
 				  std::get<static_cast<int> (DRAW_QUE::IMAGE)>(_dQue),
 				  true);
 	}
-	
+	//DrawBox(150, 495, 650, 527, 0x000000, true);
 	ScreenFlip();	//ó†âÊñ Çï\âÊñ Ç…èuä‘∫Àﬂ∞
 }
 

@@ -3,7 +3,10 @@
 
 enum class SCN_ID	
 {
+	TITLE,
 	GAME,	// πﬁ∞—íÜÇÃº∞›
+	GAMEOVER,
+	CLEAR,
 	MAX
 };
 
@@ -17,5 +20,7 @@ public:
 	virtual ~BaseScene() {};
 	virtual unique_Base Update(unique_Base own) = 0;
 	virtual SCN_ID GetSceneID(void) = 0;
+	virtual SCN_ID NextSceneID(void) = 0;
+	SCN_ID _scnID;	// åªç›ÇÃº∞›ID
 };
 

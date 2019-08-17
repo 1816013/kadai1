@@ -1,9 +1,10 @@
 #include <DxLib.h>
 #include <memory>
 #include "Player.h"
-#include "common/ImageMng.h"
+#include <common/ImageMng.h>
 #include "_DebugConOut.h"
 #include "_DebugDispOut.h"
+#include <Scene/SceneMng.h>
 
 
 
@@ -23,6 +24,8 @@ Player::Player(const Vector2_D& vec, const Vector2& size)
 	_pos = vec;
 	_size = size;
 	_alive = true;
+	_remain = 2;
+	_life = 1;
 	_speed = { 4,4 };
 	//TRACE("vec.x %d\n", vec.x);
 }
@@ -33,11 +36,25 @@ Player::~Player()
 
 void Player::Update(void)
 {
-	if (!_alive)
+	if (_life <= 0)
 	{
 		animKey(ANIM::DEATH);
+		_alive = false;
 	}
-	if (DestroyProc())
+	if (!_alive && _remain > 0)
+	{
+		
+		_life = 1;
+		if (isAnimEnd())
+		{
+			_pos = Vector2_D(lpSceneMng.gameScreenSize.x / 2 - 16, lpSceneMng.gameScreenSize.y - 48);
+			_animFrame = 0;
+			animKey(ANIM::NOMAL);
+			_alive = true;		
+			_remain--;
+		}
+	}
+	if (DestroyProc() && _remain <= 0)
 	{
 		return;
 	}
@@ -51,29 +68,42 @@ void Player::Update(void)
 	}
 
 	_inputState->Update();
-	if (_inputState->state(INPUT_ID::LEFT).first)
+	if (_alive)
 	{
-		_pos.x -= _speed.x;
+		if (_inputState->state(INPUT_ID::LEFT).first)
+		{
+			_pos.x -= _speed.x;
+		}
+		if (_inputState->state(INPUT_ID::RIGHT).first)
+		{
+			_pos.x += _speed.x;
+		}
+		/*if (_inputState->state(INPUT_ID::UP).first)
+		{
+			_pos.y--;
+		}
+		if (_inputState->state(INPUT_ID::DOWN).first)
+		{
+			_pos.y++;
+		}*/
 	}
-	if (_inputState->state(INPUT_ID::RIGHT).first)
+
+
+	for (int i = 0; i < _remain; i++)
 	{
-		_pos.x += _speed.x;
+		lpSceneMng.addDrawQue({ IMAGE_ID("·¬×")[0], 155 + 30 * i, 464 });
 	}
-	if (_inputState->state(INPUT_ID::UP).first)
-	{
-		_pos.y--;
-	}
-	if (_inputState->state(INPUT_ID::DOWN).first)
-	{
-		_pos.y++;
-	}
+
+
+
+
 	_dbgDrawFormatString(0, 0, 0xffffff, "plauyerPos: x %f, y%f", _pos.x, _pos.y);
 	_dbgDrawBox(_pos.x - _size.x / 2, _pos.y - _size.y / 2, _pos.x + _size.x / 2, _pos.y + _size.y / 2, 0x00ff00, true);
 }
 
 void Player::Draw(void)
 {
-	//DrawGraph(_pos.x, _pos.y, ImageMng::GetInstance().GetID("·¬×" /*,"image/char.png",Vector2(10, 10), Vector2(30, 32)*/)[0], true);
+	
 	
 }
 

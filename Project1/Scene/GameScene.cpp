@@ -5,7 +5,7 @@
 #include "SceneMng.h"
 #include <Unit/Player.h>
 #include <Unit/Enemy.h>
-#include "Shot.h"
+#include <Unit/Shot.h>
 #include "_DebugConOut.h"
 #include "_DebugDispOut.h"
 #include <Input/KeyState.h>
@@ -21,6 +21,7 @@ GameScene::GameScene()
 	_inputState = std::make_unique<KeyState>();
 	_col = std::make_unique<Collision>();
 	_arrivalCnt = 0;
+	_scnID = SCN_ID::GAME;
 }
 
 GameScene::~GameScene()
@@ -29,24 +30,25 @@ GameScene::~GameScene()
 
 unique_Base GameScene::Update(unique_Base own)
 {
+
 	_col->Update(_objList);
 	_inputState->Update();
 	Vector2_D _pos[6] = 
 	{
 		{ (double)0 - 16,(double)0  - 16},
 		{ (double)0 - 16, (double)lpSceneMng.gameScreenSize.y / 2 - 16},
-		{ (double)0 - 16, (double)lpSceneMng.gameScreenSize.y - 48},
+		{ (double)0 - 16, (double)lpSceneMng.gameScreenSize.y - 80},
 		{ (double)lpSceneMng.gameScreenSize.x + 16, (double)0 - 16},
 		{ (double)lpSceneMng.gameScreenSize.x + 16,(double)lpSceneMng.gameScreenSize.y / 2 - 16},
-		{ (double)lpSceneMng.gameScreenSize.x + 16, (double)lpSceneMng.gameScreenSize.y - 48}
+		{ (double)lpSceneMng.gameScreenSize.x + 16, (double)lpSceneMng.gameScreenSize.y - 80}
 	};
 
 	Vector2_D sigAim[2];	// º∏ﬁ”≤ƒﬁÇÃñ⁄ïWç¿ïW
 	Vector2_D sigAim2[2];
 	sigAim[1] = { (double)300, (double)lpSceneMng.gameScreenSize.y / 2 - 16 };
 	sigAim[0] = { (double)200, (double)lpSceneMng.gameScreenSize.y / 2 - 16 };
-	sigAim2[1] = { (double)100, (double)lpSceneMng.gameScreenSize.y - 48 };
-	sigAim2[0] = { (double)400, (double)lpSceneMng.gameScreenSize.y - 48 };
+	sigAim2[1] = { (double)100, (double)lpSceneMng.gameScreenSize.y - 80 };
+	sigAim2[0] = { (double)400, (double)lpSceneMng.gameScreenSize.y - 80 };
 
 	/*Vector2_D aim[42];
 	for (int y = 0; y < 6; y++)
@@ -59,9 +61,8 @@ unique_Base GameScene::Update(unique_Base own)
 
 
 	auto a = _bossAim.size() + _goeiAim.size() + _zakoAim.size();
-	_lastKey = _newKey;
-	_newKey = CheckHitKey(KEY_INPUT_R);
-	if (_newKey && !_lastKey || _popCnt % 120 == 0 && a < 40)
+
+	if (_popCnt % 120 == 0 && a < 40)
 	{
 		int no = rand() % 6;
 		for (int i = 0; i < 5; i++)
@@ -86,7 +87,7 @@ unique_Base GameScene::Update(unique_Base own)
 			{
 				if (_bossAim.size() < 4)
 				{
-					_bossAim.emplace_back(Vector2_D(32 * _bossAim.size() + lpSceneMng.gameScreenSize.x / 2 - 48, 32));
+					_bossAim.emplace_back(Vector2_D(32 * _bossAim.size() + lpSceneMng.gameScreenSize.x / 2 - 48, 16));
 					eMoveCon.emplace_back(_bossAim[_bossAim.size() - 1], E_MOVE_TYPE::AIMING);
 				}
 				else
@@ -98,7 +99,7 @@ unique_Base GameScene::Update(unique_Base own)
 			{
 				if (_goeiAim.size() < 16)
 				{
-					_goeiAim.emplace_back(Vector2_D(32 * (int)(_goeiAim.size() % 8) + lpSceneMng.gameScreenSize.x / 2 - 112, 64 + 32 * (int)(_goeiAim.size() / 8)));
+					_goeiAim.emplace_back(Vector2_D(32 * (int)(_goeiAim.size() % 8) + lpSceneMng.gameScreenSize.x / 2 - 112, 48 + 32 * (int)(_goeiAim.size() / 8)));
 					eMoveCon.emplace_back(_goeiAim[_goeiAim.size() - 1], E_MOVE_TYPE::AIMING);
 				}
 				else
@@ -110,7 +111,7 @@ unique_Base GameScene::Update(unique_Base own)
 			{
 				if (_zakoAim.size() < 20)
 				{
-					_zakoAim.emplace_back(Vector2_D(32 * (int)(_zakoAim.size() % 10) + lpSceneMng.gameScreenSize.x / 2 - 144, 128 + 32 * (int)(_zakoAim.size() / 10)));
+					_zakoAim.emplace_back(Vector2_D(32 * (int)(_zakoAim.size() % 10) + lpSceneMng.gameScreenSize.x / 2 - 144, 112 + 32 * (int)(_zakoAim.size() / 10)));
 					eMoveCon.emplace_back(_zakoAim[_zakoAim.size() - 1], E_MOVE_TYPE::AIMING);
 				}
 			}
@@ -142,6 +143,9 @@ unique_Base GameScene::Update(unique_Base own)
 	size_t plS_count = std::count_if(_objList.begin(), _objList.end(),
 		[](shared_Obj& obj)->bool {return ((*obj).GetUnitType() == UNIT::P_SHOT); }
 	);
+	size_t eS_count = std::count_if(_objList.begin(), _objList.end(),
+		[](shared_Obj& obj)->bool {return ((*obj).GetUnitType() == UNIT::E_SHOT); }
+	);
 
  	for (auto& itr : _objList)
 	{
@@ -152,7 +156,7 @@ unique_Base GameScene::Update(unique_Base own)
 			{
 				_shotList.emplace_back(itr->pos(), itr->GetUnitType());
 			}
-			if (itr->GetUnitType() == UNIT::ENEMY)
+			if (itr->GetUnitType() == UNIT::ENEMY && eS_count < 5)
 			{
 				_shotList.emplace_back(itr->pos(), itr->GetUnitType());
 			}
@@ -176,6 +180,19 @@ unique_Base GameScene::Update(unique_Base own)
 	}
 	
 
+	if (_objList.end() == std::find_if(_objList.begin(),
+									   _objList.end(),
+									   [](shared_Obj& obj) { return (*obj).GetUnitType() == UNIT::PLAYER; }))
+	{
+		_scnID = SCN_ID::GAMEOVER;
+	}
+	if (_objList.end() == std::find_if(_objList.begin(),
+									   _objList.end(),
+									   [](shared_Obj& obj) { return (*obj).GetUnitType() == UNIT::ENEMY; }))
+	{
+		_scnID = SCN_ID::CLEAR;
+	}
+
 	_objList.erase(std::remove_if(
 		_objList.begin(),
 		_objList.end(),
@@ -190,6 +207,11 @@ unique_Base GameScene::Update(unique_Base own)
 SCN_ID GameScene::GetSceneID(void)
 {
 	return SCN_ID::GAME;
+}
+
+SCN_ID GameScene::NextSceneID(void)
+{
+	return _scnID;
 }
 
 void GameScene::EnemyInstance(ENEMY_T state)
@@ -246,10 +268,8 @@ void GameScene::DrawChar(std::string str, Vector2 pos)
 bool GameScene::Init(void)
 {
 	_ghGameScreen = MakeScreen(lpSceneMng.gameScreenSize.x, lpSceneMng.gameScreenSize.y, true);
-	_objList.emplace_back(new Player(Vector2_D(lpSceneMng.gameScreenSize.x / 2 - 16, lpSceneMng.gameScreenSize.y - 16), Vector2(30, 32)));
+	_objList.emplace_back(new Player(Vector2_D(lpSceneMng.gameScreenSize.x / 2 - 16, lpSceneMng.gameScreenSize.y - 48), Vector2(30, 32)));
 	
-
-
 	srand(time(NULL));
 	return true;
 }

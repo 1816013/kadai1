@@ -18,4 +18,5 @@ public:
 private:
 	bool init(void) override;			// •`‰æÃŞ°À‚Ì‰Šú‰»‚È‚Ç
 	std::unique_ptr<InputState> _inputState;	
+	int _remain;						// c‹@
 };

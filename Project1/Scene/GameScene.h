@@ -5,7 +5,7 @@
 #include "BaseScene.h"
 #include <Unit/Obj.h>
 #include <Unit/Enemy.h>
-#include "Shot.h"
+#include <Unit/Shot.h>
 #include <Input/InputState.h>
 #include "Collision.h"
 
@@ -20,6 +20,7 @@ public:
 	unique_Base Update(unique_Base own) override;	// 各ｱｯﾌﾟﾃﾞｰﾄをまとめる
 	void Draw(void);								// ｹﾞｰﾑｽｸﾘｰﾝでの描画
 	SCN_ID GetSceneID(void);						// 今のｼｰﾝ
+	SCN_ID NextSceneID(void);						// 次のｼｰﾝを取得
 	void EnemyInstance(ENEMY_T state);				// ｴﾈﾐｰをｲﾝｽﾀﾝｽする
 private:
 	void DrawChar(std::string str, Vector2 pos);	// 文字列の描画用
@@ -31,6 +32,7 @@ private:
 	bool Init(void);			// ｲﾝｽﾀﾝｽなどの初期化
 	E_AIM eMoveCon;				// 目標座標と移動方法を格納するもの
 
+
 	// 仮
 	vecVec2_D _bossAim;			// ﾎﾞｽの最終目標
 	vecVec2_D _goeiAim;			// ｺﾞｴｲの最終目標
@@ -38,9 +40,6 @@ private:
 	int _popCnt;				// ｴﾈﾐｰの出現間隔のｶｳﾝﾀ
 	int _arrivalCnt;			// ｴﾈﾐｰが全部出たら進めるｶｳﾝﾀ一定の量になるとｴﾈﾐｰの動きが変わる
 
-	// ﾃﾞﾊﾞｯｸﾞ用
-	bool _newKey;
-	bool _lastKey;				// 
 
 
 	std::unique_ptr<Collision> _col;

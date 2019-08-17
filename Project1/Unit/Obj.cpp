@@ -8,6 +8,7 @@ Obj::Obj()
 {
 	_animFrame = 0;
 	_animKey = ANIM::NOMAL;
+	_colF = false;
 }
 
 Obj::~Obj()
@@ -88,6 +89,11 @@ const Vector2 Obj::size(void) const
 void Obj::SetAlive(bool flag)
 {
 	_alive = flag;
+}
+
+void Obj::SetColF(bool flag)
+{
+	_colF = flag;
 }
 
 bool Obj::AllArrivalF(bool flag)

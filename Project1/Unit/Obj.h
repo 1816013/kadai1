@@ -47,6 +47,10 @@ public:
 	bool isAlive(void) { return _alive; };	// 叙述関数(ﾌﾟﾚﾃﾞｨｹｰﾄ)やられたか
 	bool isDeath(void) { return _death; };	// 叙述関数(ﾌﾟﾚﾃﾞｨｹｰﾄ)死んでるか
 	bool isShot(void) { return _shotF; };	// 叙述関数(ﾌﾟﾚﾃﾞｨｹｰﾄ)撃っているか
+	void SetColF(bool flag);
+	bool isColF(void) { return _colF; };
+	int submitLife(void) { return _life -= 1; };
+
 	// 仮
 	bool AllArrivalF(bool flag);		// 全員到着したかのｾｯﾄ
 	
@@ -54,10 +58,9 @@ public:
 private:
 	std::map<ANIM, AnimVector> _animMap;
 	ANIM _animKey;						// ｱﾆﾒｰｼｮﾝの名前
-	int _animFrame;						// ｱﾆﾒｰｼｮﾝの現在のｺﾏ
-	bool _animEnd;
 protected:
 	int _animCnt;						// ｱﾆﾒｰｼｮﾝのｶｳﾝﾀ
+	int _animFrame;						// ｱﾆﾒｰｼｮﾝの現在のｺﾏ
 	bool SetAnim(const ANIM key, AnimVector& data);	// ｱﾆﾒｰｼｮﾝのｾｯﾄ
 	bool isAnimEnd(void);				// ｱﾆﾒｰｼｮﾝの終了
 	bool DestroyProc(void);				// やられたあとの制御
@@ -69,6 +72,7 @@ protected:
 	float _angle;						// 角度
 	int _life;							// HP
 	bool _shotF;						// ｼｮｯﾄ撃っているか
+	bool _colF;							// 衝突
 	
 	// 仮
 	bool _AllArrivalF;					// 全員到着したか(ｴﾈﾐｰのみ)

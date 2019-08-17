@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{F110BC06-712C-422F-A312-D81606349820}</ProjectGuid>
     <RootNamespace>Project1</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -135,11 +135,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Scene\ClearScene.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="Scene\GameoverScene.cpp" />
     <ClCompile Include="Input\InputState.cpp" />
     <ClCompile Include="Input\INPUT_ID.cpp" />
     <ClCompile Include="Input\KeyState.cpp" />
-    <ClCompile Include="Shot.cpp" />
+    <ClCompile Include="Unit\Shot.cpp" />
+    <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="Unit\Enemy.cpp" />
     <ClCompile Include="common\ImageMng.cpp" />
     <ClCompile Include="Scene\SceneMng.cpp" />
@@ -151,14 +154,17 @@
     <ClCompile Include="_DebugDispOut.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Scene\ClearScene.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="common\details\VECTOR2.h" />
+    <ClInclude Include="Scene\GameoverScene.h" />
     <ClInclude Include="Input\InputState.h" />
     <ClInclude Include="Input\INPUT_ID.h" />
     <ClInclude Include="Input\KeyState.h" />
     <ClInclude Include="Scene\SceneMng.h" />
     <ClInclude Include="Scene\BaseScene.h" />
-    <ClInclude Include="Shot.h" />
+    <ClInclude Include="Unit\Shot.h" />
+    <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="Unit\Enemy.h" />
     <ClInclude Include="common\ImageMng.h" />
     <ClInclude Include="Scene\GameScene.h" />

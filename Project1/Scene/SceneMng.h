@@ -50,6 +50,8 @@ private:
 	// ïœêî
 	static std::unique_ptr<SceneMng, SceneDeleter> s_Instance;		
 	unique_Base _activeScene;		// åªç›ÇÃº∞›
+	SCN_ID _nowScnID;						// åªç›ÇÃº∞›ID
+	SCN_ID _nextScnID;						// åªç›ÇÃº∞›ID
 	int frame = 0;		// ±∆“∞ºÆ›ópÃ⁄∞—
 
 
